@@ -155,8 +155,8 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     val el = listOf(a, b, c)
-    val c1 = el.max()
-    val a1 = el.min()
+    val c1 = el.maxOrNull()!!
+    val a1 = el.minOrNull()!!
     return when {
         ((a1 * a1 + (a * a * b * b * c * c) / (a1 * a1 * c1 * c1)) > c1 * c1) && ((a + b > c) && (b + c > a) && (a + c > b)) -> 0
         ((a1 * a1 + (a * a * b * b * c * c) / (a1 * a1 * c1 * c1)) == c1 * c1) && ((a + b > c) && (b + c > a) && (a + c > b)) -> 1
