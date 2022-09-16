@@ -4,6 +4,7 @@ package lesson1.task1
 
 // import kotlin.math.*
 import kotlin.math.PI
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 1: простые функции
@@ -77,7 +78,7 @@ fun seconds(hours: Int, minutes: Int, second: Int) = hours * 60 * 60 + minutes *
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int) =
-    (sagenes * 48 * 4.445 + arshins * 16 * 4.445 + vershoks * 4.445) / 100.0
+    4.445 * (sagenes * 48 + arshins * 16 + vershoks) / 100.0
 
 /**
  * Тривиальная (1 балл)
@@ -127,7 +128,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int) =
-    ((initial * (1 + percent / 100.0)) * (1 + percent / 100.0)) * (1 + percent / 100.0)
+    initial * (1 + percent / 100.0).pow(3)
 
 /**
  * Простая (2 балла)
