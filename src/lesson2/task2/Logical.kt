@@ -4,6 +4,7 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import kotlin.math.abs
+import lesson2.task1.sqrTrue
 
 /**
  * Пример
@@ -29,14 +30,6 @@ fun isNumberHappy(number: Int) =
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun sqrTrue(kX: Int, kY: Int, bX: Int, bY: Int): Int {
-    val x = kX - bX
-    val y = kY - bY
-    return when {
-        abs(x) == abs(y) -> 1
-        else -> 0
-    }
-}
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int) =
     (x1 == x2) || (y1 == y2) || (sqrTrue(x1, y1, x2, y2) == 1)
 
