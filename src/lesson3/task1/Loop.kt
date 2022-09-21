@@ -276,7 +276,24 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var step = 1
+    var ifAbsElLess = x % (2 * PI)
+    var resSin = x % (2 * PI)
+    var plusMinus = false
+    while (ifAbsElLess >= eps) {
+        step += 2
+        ifAbsElLess = abs(x.pow(step) / factorial(step))
+        if (plusMinus == false) {
+            resSin -= x.pow(step) / factorial(step)
+            plusMinus = true
+        } else {
+            resSin += x.pow(step) / factorial(step)
+            plusMinus = false
+        }
+    }
+    return resSin
+}
 
 /**
  * Средняя (4 балла)
@@ -287,7 +304,24 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var step = 0
+    var ifAbsElLess = x % (2 * PI)
+    var resCos = 1.0
+    var plusMinus = false
+    while (ifAbsElLess >= eps) {
+        step += 2
+        ifAbsElLess = abs(x.pow(step) / factorial(step))
+        if (plusMinus == false) {
+            resCos -= x.pow(step) / factorial(step)
+            plusMinus = true
+        } else {
+            resCos += x.pow(step) / factorial(step)
+            plusMinus = false
+        }
+    }
+    return resCos
+}
 
 
 /**
