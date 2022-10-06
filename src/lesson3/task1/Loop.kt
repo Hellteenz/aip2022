@@ -77,7 +77,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var cnt = 0
-    var num = n
+    var num = abs(n)
     if (num == 0) return 1
     else while (num > 0) {
         cnt++
@@ -92,10 +92,20 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int =
-    if ((n == 1) || (n == 2)) 1
-    else fib(n - 2) + fib(n - 1)
-
+fun fib(n: Int): Int {
+    var res = 0
+    var cnt = 0
+    var n0 = 1
+    var n1 = 1
+    if (n == 1 || n == 2) return 1
+    else while (cnt != (n - 2)) {
+        res += (n0 + n1)
+        n0 = n1
+        n1 = res
+        cnt++
+    }
+    return res
+}
 
 /**
  * Простая (2 балла)
@@ -104,7 +114,8 @@ fun fib(n: Int): Int =
  */
 fun minDivisor(n: Int): Int {
     var del = 0
-    for (i in 2..n){
+    if (isPrime(n)) return n
+    else for (i in 2..sqrt(n.toDouble()).toInt()) {
         del = i
         if (n % i == 0) break
     }
@@ -118,7 +129,7 @@ fun minDivisor(n: Int): Int {
  */
 fun maxDivisor(n: Int): Int {
     var del = 0
-    for (i in n - 1 downTo 1){
+    for (i in n - 1 downTo 1) {
         del = i
         if (n % i == 0) break
     }
@@ -145,7 +156,7 @@ fun collatzSteps(x: Int): Int {
     var xx = x
     var cnt = 0
     while (xx != 1) {
-        if (x % 2 == 0) xx /= 2 else xx = xx * 3 + 1
+        if (xx % 2 == 0) xx /= 2 else xx = xx * 3 + 1
         cnt++
     }
     return cnt
@@ -157,14 +168,17 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var mul = 0
-    for (k in 1..n * m) {
-        mul = k
-        if ((k % n == 0) && (k % m == 0)) break
+fun NOD(x: Int, y: Int): Int {
+    var a = x
+    var b = y
+    while (a != b) {
+        if (a > b) a -= b
+        else b -= a
     }
-    return mul
+    return a
 }
+fun lcm(m: Int, n: Int) = (m * n) / NOD(m, n)
+
 
 /**
  * Средняя (3 балла)
@@ -177,10 +191,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     val delM = mutableListOf<Int>()
     val delN = mutableListOf<Int>()
     var answer = 0
-    for (i in 1..m){
+    for (i in 1..m) {
         if (m % i == 0) delM.add(i)
     }
-    for (j in 1..n){
+    for (j in 1..n) {
         if (n % j == 0) delN.add(j)
     }
     for (i in delM) {
@@ -189,7 +203,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
             break
         } else answer = 1
     }
-    if (answer == 1) return true else return false
+    return (answer == 1)
 }
 
 /**
@@ -238,7 +252,7 @@ fun isPalindrome(n: Int): Boolean {
             break
         }
     }
-    if (res == 1) return true else return false
+    return (res == 1)
 }
 
 /**
@@ -262,7 +276,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     for (i in 0..9) {
         if (numbers[i] != 0) cnt++
     }
-    if (cnt >= 2) return true else return false
+    return (cnt >= 2)
 }
 
 
@@ -276,24 +290,7 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 
-fun sin(x: Double, eps: Double): Double {
-    var step = 1
-    var ifAbsElLess = x % (2 * PI)
-    var resSin = x % (2 * PI)
-    var plusMinus = false
-    while (ifAbsElLess >= eps) {
-        step += 2
-        ifAbsElLess = abs(x.pow(step) / factorial(step))
-        if (plusMinus == false) {
-            resSin -= x.pow(step) / factorial(step)
-            plusMinus = true
-        } else {
-            resSin += x.pow(step) / factorial(step)
-            plusMinus = false
-        }
-    }
-    return resSin
-}
+fun sin(x: Double, eps: Double): Double = TODO()
 
 /**
  * Средняя (4 балла)
@@ -304,24 +301,7 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double {
-    var step = 0
-    var ifAbsElLess = x % (2 * PI)
-    var resCos = 1.0
-    var plusMinus = false
-    while (ifAbsElLess >= eps) {
-        step += 2
-        ifAbsElLess = abs(x.pow(step) / factorial(step))
-        if (plusMinus == false) {
-            resCos -= x.pow(step) / factorial(step)
-            plusMinus = true
-        } else {
-            resCos += x.pow(step) / factorial(step)
-            plusMinus = false
-        }
-    }
-    return resCos
-}
+fun cos(x: Double, eps: Double): Double = TODO()
 
 
 /**
@@ -334,23 +314,17 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    val elements = mutableListOf<Int>()
-    val sqrList = mutableListOf<Int>()
-    var numToSquare = 0
-    var square = 0
-    while (elements.size < n) {
-        numToSquare += 1
-        square = numToSquare * numToSquare
-        while (square > 0) {
-            sqrList.add(square % 10)
-            square /= 10
-        }
-        for (i in 0..(sqrList.size - 1)) {
-            elements += sqrList[sqrList.size - 1 - i]
-        }
-        sqrList.clear()
+    var cnt = 0
+    var numForSquare = 1
+    var sqr = 1
+    while (cnt < n) {
+        sqr = numForSquare * numForSquare
+        cnt += digitNumber(sqr)
+        numForSquare++
     }
-    return elements[n - 1]
+    val digitToReturn = cnt - n
+    numForSquare--
+    return 0
 }
 
 /**
