@@ -313,19 +313,7 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var cnt = 0
-    var numForSquare = 1
-    var sqr = 1
-    while (cnt < n) {
-        sqr = numForSquare * numForSquare
-        cnt += digitNumber(sqr)
-        numForSquare++
-    }
-    val digitToReturn = cnt - n
-    numForSquare--
-    return 0
-}
+fun squareSequenceDigit(n: Int): Double = TODO()
 
 /**
  * Сложная (5 баллов)
@@ -336,22 +324,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    val elements = mutableListOf<Int>()
-    val fibList = mutableListOf<Int>()
-    var numToFib = 0
-    var fibNum = 0
-    while (elements.size < n) {
-        numToFib += 1
-        fibNum = fib(numToFib)
-        while (fibNum > 0) {
-            fibList.add(fibNum % 10)
-            fibNum /= 10
-        }
-        for (i in 0..(fibList.size - 1)) {
-            elements += fibList[fibList.size - 1 - i]
-        }
-        fibList.clear()
-    }
-    return elements[n - 1]
-}
+fun fibSequenceDigit(n: Int): Int = TODO()
