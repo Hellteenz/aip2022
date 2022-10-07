@@ -255,6 +255,7 @@ fun factorizeToString(n: Int): String = TODO()
 fun convert(n: Int, base: Int): List<Int> {
     val listOfDiffSis = mutableListOf<Int>()
     var x = n
+    if (x == 0) listOfDiffSis += 0
     while (x > 0) {
         listOfDiffSis += x % base
         x /= base
@@ -278,6 +279,7 @@ fun convertToString(n: Int, base: Int): String {
     var x = n
     val num = "1234567890"
     val alph = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    if (x == 0) strOfDiffSis += "0"
     while (x > 0) {
         if (x % base < 10) strOfDiffSis += (x % base).toString()
         else strOfDiffSis += alph[x % base - 10]
