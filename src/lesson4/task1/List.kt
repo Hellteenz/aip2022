@@ -234,17 +234,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> {
-    val primedig = mutableListOf<Int>()
-    var x = n
-    while (x > 0) {
-        for (i in 2..sqrt(x.toDouble()).toInt()) {
-            if (isPrime(i) && x % i == 0) primedig += i
-        }
-        x /= primedig.last()
-    }
-    return primedig.sorted()
-}
+fun factorize(n: Int): List<Int> = TODO()
 
 /**
  * Сложная (4 балла)
