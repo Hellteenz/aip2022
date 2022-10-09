@@ -343,42 +343,4 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-//fun space(a: String): String = if (a.isNotEmpty()) "$a " else ""
-
-//fun hundRus(ns: String, hund: List<String>, teens: List<String>, dozens: List<String>, single: List<String>): String {
-//    return if (ns[1].digitToInt() == 1) (space(hund[(ns[0]).digitToInt()]) + teens[(ns[2]).digitToInt()]).trim()
-//    else (space(hund[(ns[0]).digitToInt()]) + space(dozens[(ns[1]).digitToInt()]) + space(single[(ns[2]).digitToInt()])).trim()
-//}
-
-//fun thusRussian(ns: String, singlediff: List<String>, thus: List<String>, hund: List<String>, dozens: List<String>, single: List<String>): String {
-//    if (ns[0].digitToInt() == 1) return (space(singlediff[0]) + space(thus[0]) + space(hund[(ns[1]).digitToInt()]) + space(dozens[(ns[2]).digitToInt()]) + space(single[(ns[3]).digitToInt()])).trim()
-//    if (ns[0].digitToInt() == 2) return (space(singlediff[1]) + space(thus[1]) + space(hund[(ns[1]).digitToInt()]) + space(dozens[(ns[2]).digitToInt()]) + space(single[(ns[3]).digitToInt()])).trim()
-//    if (ns[0].digitToInt() in 3..4) return (space(hund[ns[0].digitToInt()]) + space(thus[1]) + space(hund[(ns[1]).digitToInt()]) + space(dozens[(ns[2]).digitToInt()]) + space(single[(ns[3]).digitToInt()])).trim()
-//    if (ns[0].digitToInt() in 5..9) return (space(hund[ns[0].digitToInt()]) + space(thus[2]) + space(hund[(ns[1]).digitToInt()]) + space(dozens[(ns[2]).digitToInt()]) + space(single[(ns[3]).digitToInt()])).trim()
-//    else return "0"
-//}
-//fun tenThusRus(ns: String, singlediff: List<String>, thus: List<String>, hund: List<String>, dozens: List<String>, single: List<String>, teens: List<String>): String {
-//    return if (ns[0].digitToInt() == 1) (space(teens[ns[1].digitToInt()]) + space(thus[2]) + hundRus((ns.toInt() % 100).toString(), teens, hund, dozens, single)).trim()
-//    else (space(dozens[(ns[0]).digitToInt()]) + thusRussian((ns.toInt() % 1000).toString(), singlediff, thus, hund, dozens, single)).trim()
-//}
-//fun russian(n: Int): String {
-//    val hund = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
-//    val single = listOf("ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-//    val singlediff = listOf("одна", "две")
-//    val teens = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семьнадцать", "восемьнадцать", "девятнадцать")
-//    val dozens = listOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-//    val thus = listOf("тысяча", "тысячи", "тысяч")
-//    val ns = n.toString()
-//    if (ns.length == 1) return single[n]
-//    if (ns.length == 2) {
-//        return if (ns[0].digitToInt() == 1) teens[(ns[1]).digitToInt()]
-//        else (space(dozens[(ns[0]).digitToInt()]) + single[(ns[1]).digitToInt()]).trim()
-//    }
-//    if (ns.length == 3) {
-//        return hundRus(ns, hund, teens, dozens, single)
-//    }
-//    if (ns.length == 4) return thusRussian(ns, singlediff, thus, hund, dozens, single)
-//    if (ns.length == 5) return tenThusRus(ns, singlediff, thus, hund, dozens, single, teens)
-//    if (ns.length == 6) return (space(hund[(ns[0]).digitToInt()]) + space(tenThusRus((ns.toInt() % 10000).toString(), singlediff, thus, hund, dozens, single, teens))).trim()
-//    else return "Error"
-//}
+fun russian(n: Int): String = TODO()
