@@ -243,21 +243,7 @@ fun isPalindrome(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean {
-    val numbers = Array(10, {0})
-    var x = n
-    var flag = 10
-    while (x > 0) {
-        flag = x % 10
-        numbers[flag] += 1
-        x /= 10
-    }
-    var cnt = 0
-    for (i in 0..9) {
-        if (numbers[i] != 0) cnt++
-    }
-    return (cnt >= 2)
-}
+fun hasDifferentDigits(n: Int): Boolean = TODO()
 
 
 /**
@@ -293,7 +279,21 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Double = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var digitCounter = 0
+    var numForSquare = 1
+    var sqr = 1
+    while (digitCounter < n) {
+        sqr = numForSquare * numForSquare
+        digitCounter += digitNumber(sqr)
+        numForSquare++
+    }
+    return if (digitCounter == n) sqr % 10
+    else {
+        val powSqr = digitCounter - n
+        (sqr % 10.0.pow(powSqr + 1) / 10.0.pow(powSqr)).toInt()
+    }
+}
 
 /**
  * Сложная (5 баллов)
@@ -304,4 +304,18 @@ fun squareSequenceDigit(n: Int): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var digitCounter = 0
+    var numForFib = 1
+    var fibNum = 1
+    while (digitCounter < n) {
+        fibNum = fib(numForFib)
+        digitCounter += digitNumber(fibNum)
+        numForFib++
+    }
+    return if (digitCounter == n) fibNum % 10
+    else {
+        val powFibNum = digitCounter - n
+        (fibNum % 10.0.pow(powFibNum + 1) / 10.0.pow(powFibNum)).toInt()
+    }
+}
