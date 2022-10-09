@@ -184,24 +184,7 @@ fun lcm(m: Int, n: Int) = (m * n) / NOD(m, n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val delM = mutableListOf<Int>()
-    val delN = mutableListOf<Int>()
-    var answer = 0
-    for (i in 1..m) {
-        if (m % i == 0) delM.add(i)
-    }
-    for (j in 1..n) {
-        if (n % j == 0) delN.add(j)
-    }
-    for (i in delM) {
-        if ((i in delN) && (i != 1)) {
-            answer = 0
-            break
-        } else answer = 1
-    }
-    return (answer == 1)
-}
+fun isCoPrime(m: Int, n: Int): Boolean = TODO()
 
 /**
  * Средняя (3 балла)
