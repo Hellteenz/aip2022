@@ -79,7 +79,7 @@ fun digitNumber(n: Int): Int {
     var cnt = 0
     var num = abs(n)
     if (num == 0) return 1
-    else while (num > 0) {
+    while (num > 0) {
         cnt++
         num /= 10
     }
@@ -93,16 +93,13 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var res = 0
-    var cnt = 0
-    var n0 = 1
     var n1 = 1
-    if (n == 1 || n == 2) return 1
-    else while (cnt != (n - 2)) {
-        res += (n0 + n1)
-        n0 = n1
+    var n2 = 1
+    var res = 1
+    for (i in 3..n) {
+        res = n1 + n2
+        n2 = n1
         n1 = res
-        cnt++
     }
     return res
 }
