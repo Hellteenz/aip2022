@@ -103,15 +103,14 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int {
-    return when {
-        ((kingX == rookX1) || (kingY == rookY1)) && (kingX != rookX2) && (kingY != rookY2) -> 1
-        ((kingX == rookX2) || (kingY == rookY2)) && (kingX != rookX1) && (kingY != rookY1) -> 2
-        ((kingX == rookX2) || (kingY == rookY2)) && ((kingX == rookX1) || (kingY == rookY1)) -> 3
-        //(kingX != rookX2) && (kingY != rookY2) && (kingX != rookX1) && (kingY != rookY1) -> 0
-        else -> 0
-    }
+): Int = when {
+    ((kingX == rookX1) || (kingY == rookY1)) && (kingX != rookX2) && (kingY != rookY2) -> 1
+    ((kingX == rookX2) || (kingY == rookY2)) && (kingX != rookX1) && (kingY != rookY1) -> 2
+    ((kingX == rookX2) || (kingY == rookY2)) && ((kingX == rookX1) || (kingY == rookY1)) -> 3
+    //(kingX != rookX2) && (kingY != rookY2) && (kingX != rookX1) && (kingY != rookY1) -> 0
+    else -> 0
 }
+
 
 /**
  * Простая (2 балла)
@@ -135,14 +134,13 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    return when {
-        ((kingX == rookX) || (kingY == rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) != 1) -> 1
-        ((kingX != rookX) && (kingY != rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) == 1) -> 2
-        ((kingX == rookX) || (kingY == rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) == 1) -> 3
-        else -> 0
-    }
+): Int = when {
+    ((kingX == rookX) || (kingY == rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) != 1) -> 1
+    ((kingX != rookX) && (kingY != rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) == 1) -> 2
+    ((kingX == rookX) || (kingY == rookY)) && (sqrTrue(kingX, kingY, bishopX, bishopY) == 1) -> 3
+    else -> 0
 }
+
 
 /**
  * Простая (2 балла)
