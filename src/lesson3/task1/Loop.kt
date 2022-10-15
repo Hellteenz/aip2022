@@ -112,7 +112,7 @@ fun fib(n: Int): Int {
 fun minDivisor(n: Int): Int {
     var del = 0
     if (isPrime(n)) return n
-    else for (i in 2..sqrt(n.toDouble()).toInt()) {
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
         del = i
         if (n % i == 0) break
     }
@@ -232,7 +232,7 @@ fun isPalindrome(n: Int): Boolean {
             break
         }
     }
-    return (res == 1)
+    return res == 1
 }
 
 /**
