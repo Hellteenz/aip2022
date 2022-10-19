@@ -137,15 +137,7 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    if (list.isNotEmpty()) {
-        var s = 0.0
-        for (e in list) {
-            s += e
-        }
-        return s / list.size
-    } else return 0.0
-}
+fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.size else 0.0
 
 /**
  * Средняя (3 балла)
@@ -156,17 +148,11 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty()) {
-        var s = 0.0
-        for (e in list) {
-            s += e
-        }
-        s /= list.size
-        for (i in 0 until list.size) {
-            list[i] -= s
-        }
-        return list
-    } else return list
+    val s = list.sum() / list.size
+    for (i in 0 until list.size) {
+        list[i] -= s
+    }
+    return list
 }
 
 /**
@@ -177,13 +163,13 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
 fun times(a: List<Int>, b: List<Int>): Int {
-    if (a.isNotEmpty() && b.isNotEmpty()) {
+    return if (a.isNotEmpty() && b.isNotEmpty()) {
         var c = 0
         for (i in a.indices) {
             c += a[i] * b[i]
         }
-        return c
-    } else return 0
+        c
+    } else 0
 }
 
 /**
@@ -215,7 +201,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.size > 0) {
+    return if (list.isNotEmpty()) {
         var sum = list[0]
         var a = 0
         for (i in 1 until list.size) {
@@ -223,8 +209,8 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
             sum += list[i]
             list[i] += a
         }
-        return list
-    } else return list
+        list
+    } else list
 }
 
 /**
