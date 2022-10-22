@@ -138,4 +138,20 @@ fun accountInThreeYears(initial: Int, percent: Int) =
  */
 fun numberRevert(number: Int) = (number % 10) * 100 + (number % 100 / 10) * 10 + (number / 100)
 
+fun binarySearching(sorted: List<Int>, number: Int): Boolean {
+    var sorted = sorted
+    while (sorted.isNotEmpty()) {
+        val firstList = sorted.subList(0, sorted.size / 2)
+        val secondList = sorted.subList(sorted.size / 2, sorted.size)
+        if (number <= firstList.last()) {
+            sorted = firstList
+            if (firstList.size == 1 && firstList[0] == number) return true
+        } else {
+            sorted = secondList
+            if (secondList.size == 1 && secondList[0] == number) return true
+        }
+    }
+    return false
+}
+
 
