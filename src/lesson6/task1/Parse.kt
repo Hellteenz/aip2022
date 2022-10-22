@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import lesson2.task2.year04
+import kotlin.text.*
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +77,37 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val parts = str.split(" ")
+    val month: Int
+    if (parts.size == 3) {
+        if (parts[1] in months) month = months.indexOf(parts[1]) + 1 else return ""
+        val day = parts[0].toInt()
+        if (day > 31) return ""
+        val year = parts[2].toInt()
+        if (parts[1] in listOf("апреля", "июня", "сентября", "ноября") && day > 30) return ""
+        if (parts[1] == "февраля") {
+            if (year04(year) == 1 && day > 29) return ""
+            if (year04(year) == 0 && day > 28) return ""
+        }
+        return String.format("%02d.%02d.%d", day, month, year)
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +119,52 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun checkStrEl(a: String): Boolean {
+    var list = listOf<String>()
+    for (i in 1..31) {
+        list += String.format("%02d", i)
+    }
+    return a in list
+}
+
+fun checkFullStr(parts: List<String>): Boolean {
+    for (i in 0..2) {
+        if (!checkStrEl(parts[i])) return false
+    }
+    return true
+}
+
+fun dateDigitToStr(digital: String): String {
+    val months = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    val parts = digital.split(".")
+    val month: String
+    if (parts.size == 3 && checkFullStr(parts)) {
+        if (parts[1].toInt() in 1..12) month = months[parts[1].toInt() - 1] else return ""
+        val day = parts[0].toInt()
+        if (day > 31) return ""
+        val year = parts[2].toInt()
+        if (parts[1] in listOf("04", "06", "09", "11") && day > 30) return ""
+        if (parts[1] == "02") {
+            if (year04(year) == 1 && day > 29) return ""
+            if (year04(year) == 0 && day > 28) return ""
+        }
+        return String.format("%d %s %d", day, month, year)
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -102,7 +180,19 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val fillerSet = setOf("-", "(", ")", " ", "")
+    val correctSymbols = setOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+")
+    var phoneNumber = phone.split("")
+    if (phoneNumber.indexOf("(") == phoneNumber.indexOf(")") - 1) return ""
+    var strToReturn = ""
+    phoneNumber = phoneNumber.filter { it !in fillerSet }
+    for (i in phoneNumber.indices) {
+        if (phoneNumber[i] in correctSymbols) strToReturn += phoneNumber[i]
+        else return ""
+    }
+    return strToReturn
+}
 
 /**
  * Средняя (5 баллов)
@@ -114,7 +204,15 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val fillerSet = setOf("-", "%", " ", "")
+    if (jumps.isEmpty()) return -1
+    var totalJumps = jumps.split(" ")
+    totalJumps = totalJumps.filter { it !in fillerSet }
+    if (totalJumps.isEmpty()) return -1
+    if (!totalJumps.minOf { it }[0].isDigit()) return -1
+    return totalJumps.maxOf { it }.toInt()
+}
 
 /**
  * Сложная (6 баллов)
@@ -138,7 +236,21 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val exList = expression.split(" ")
+    val symbols = listOf("+", "-")
+    if (exList[0] in symbols) throw IllegalArgumentException("Неверный формат")
+    var cnt = exList[0].toInt()
+    if (exList.size == 1 && exList[0].length > 1 && !exList[0][0].isDigit()) throw IllegalArgumentException("Неверный формат")
+    for (i in 1 until exList.size step 2) {
+        if (exList[i] in symbols && exList[i + 1] in symbols || exList[i] !in symbols && exList[i + 1] !in symbols || exList[i].length > 1 && !(exList[i][0].isDigit())) throw IllegalArgumentException(
+            "Неверный формат"
+        )
+        if (exList[i] == "+") cnt += exList[i + 1].toInt()
+        if (exList[i] == "-") cnt -= exList[i + 1].toInt()
+    }
+    return cnt
+}
 
 /**
  * Сложная (6 баллов)
@@ -149,7 +261,20 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val forLookingDuplicate = str.split(" ")
+    var indexInForReturnDup = 0
+    if (forLookingDuplicate.size in 0..1) return -1
+    for (check in forLookingDuplicate.indices) {
+        if (forLookingDuplicate[check].equals(
+                forLookingDuplicate[check + 1],
+                ignoreCase = true
+            )
+        ) return indexInForReturnDup + check
+        indexInForReturnDup += forLookingDuplicate[check].length
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
