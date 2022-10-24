@@ -208,9 +208,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
 
 /**
  * Средняя (3 балла)
