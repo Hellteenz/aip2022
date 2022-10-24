@@ -148,7 +148,7 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    val s = list.sum() / list.size
+    val s = mean(list)
     for (i in 0 until list.size) {
         list[i] -= s
     }
@@ -162,15 +162,14 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int {
-    return if (a.isNotEmpty() && b.isNotEmpty()) {
-        var c = 0
-        for (i in a.indices) {
-            c += a[i] * b[i]
-        }
-        c
-    } else 0
-}
+fun times(a: List<Int>, b: List<Int>): Int = if (a.isNotEmpty() && b.isNotEmpty()) {
+    var c = 0
+    for (i in a.indices) {
+        c += a[i] * b[i]
+    }
+    c
+} else 0
+
 
 /**
  * Средняя (3 балла)
@@ -181,13 +180,11 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Значение пустого многочлена равно 0 при любом x.
  */
 fun polynom(p: List<Int>, x: Int): Int {
-    if (p.isNotEmpty()) {
-        var px = 0.0
-        for (i in p.indices) {
-            px += p[i] * x.toDouble().pow(i)
-        }
-        return px.toInt()
-    } else return 0
+    var px = 0.0
+    for (i in p.indices) {
+        px += p[i] * x.toDouble().pow(i)
+    }
+    return px.toInt()
 }
 
 /**
@@ -200,18 +197,17 @@ fun polynom(p: List<Int>, x: Int): Int {
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    return if (list.isNotEmpty()) {
-        var sum = list[0]
-        var a = 0
-        for (i in 1 until list.size) {
-            a = sum
-            sum += list[i]
-            list[i] += a
-        }
-        list
-    } else list
-}
+fun accumulate(list: MutableList<Int>): MutableList<Int> = if (list.isNotEmpty()) {
+    var sum = list[0]
+    var a = 0
+    for (i in 1 until list.size) {
+        a = sum
+        sum += list[i]
+        list[i] += a
+    }
+    list
+} else list
+
 
 /**
  * Средняя (3 балла)
