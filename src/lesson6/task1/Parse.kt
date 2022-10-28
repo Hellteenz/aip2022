@@ -119,52 +119,7 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun checkStrEl(a: String): Boolean {
-    var list = listOf<String>()
-    for (i in 1..31) {
-        list += String.format("%02d", i)
-    }
-    return a in list
-}
-
-fun checkFullStr(parts: List<String>): Boolean {
-    for (i in 0..2) {
-        if (!checkStrEl(parts[i])) return false
-    }
-    return true
-}
-
-fun dateDigitToStr(digital: String): String {
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    val parts = digital.split(".")
-    val month: String
-    if (parts.size == 3 && checkFullStr(parts)) {
-        if (parts[1].toInt() in 1..12) month = months[parts[1].toInt() - 1] else return ""
-        val day = parts[0].toInt()
-        if (day > 31) return ""
-        val year = parts[2].toInt()
-        if (parts[1] in listOf("04", "06", "09", "11") && day > 30) return ""
-        if (parts[1] == "02") {
-            if (year04(year) == 1 && day > 29) return ""
-            if (year04(year) == 0 && day > 28) return ""
-        }
-        return String.format("%d %s %d", day, month, year)
-    }
-    return ""
-}
+fun dateDigitToStr(digital: String): String = TODO()
 
 /**
  * Средняя (4 балла)
