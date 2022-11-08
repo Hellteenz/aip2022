@@ -122,15 +122,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double {
-    if (v.isNotEmpty()) {
-        var s = 0.0
-        for (e in v) {
-            s += e * e
-        }
-        return sqrt(s)
-    } else return 0.0
-}
+fun abs(v: List<Double>): Double = if (v.isNotEmpty()) sqrt(v.sumOf { it * it }) else 0.0
 
 /**
  * Простая (2 балла)
@@ -179,13 +171,7 @@ fun times(a: List<Int>, b: List<Int>): Int = if (a.isNotEmpty() && b.isNotEmpty(
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    var px = 0.0
-    for (i in p.indices) {
-        px += p[i] * x.toDouble().pow(i)
-    }
-    return px.toInt()
-}
+fun polynom(p: List<Int>, x: Int): Int = p.mapIndexed { index, it -> (it * x.toDouble().pow(index)).toInt() }.sum()
 
 /**
  * Средняя (3 балла)
@@ -257,17 +243,15 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    var strOfDiffSis = ""
+    val strOfDiffSis = StringBuilder()
     var x = n
-    val num = "1234567890"
-    val alph = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
-    if (x == 0) strOfDiffSis += "0"
+    if (x == 0) strOfDiffSis.append("0")
     while (x > 0) {
-        if (x % base < 10) strOfDiffSis += (x % base).toString()
-        else strOfDiffSis += alph[x % base - 10]
+        if (x % base < 10) strOfDiffSis.append((x % base).toString())
+        else strOfDiffSis.append('a' + (x % base - 10))
         x /= base
     }
-    return strOfDiffSis.reversed()
+    return strOfDiffSis.toString().reversed()
 }
 
 /**
@@ -299,10 +283,9 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     var x = 0
-    val alph = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
     for (i in str.indices) {
-        if (str[i].isDigit()) x += str[i].digitToInt() * base.toDouble().pow(str.length - i - 1).toInt()
-        else x += (alph.indexOf(str[i].toString()) + 10) * base.toDouble().pow(str.length - i - 1).toInt()
+        x += if (str[i].isDigit()) str[i].digitToInt() * base.toDouble().pow(str.length - i - 1).toInt()
+        else ((str[i] - 'a') + 10) * base.toDouble().pow(str.length - i - 1).toInt()
     }
     return x
 }
@@ -340,3 +323,4 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String = TODO()
+
