@@ -244,14 +244,12 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val strOfDiffSis = StringBuilder()
-    var x = n
-    if (x == 0) strOfDiffSis.append("0")
-    while (x > 0) {
-        if (x % base < 10) strOfDiffSis.append((x % base).toString())
-        else strOfDiffSis.append('a' + (x % base - 10))
-        x /= base
+    val listOfDiffSis = convert(n, base).toMutableList()
+    for (i in 0 until listOfDiffSis.size) {
+        if (listOfDiffSis[i] < 10) strOfDiffSis.append(listOfDiffSis[i].toString())
+        else strOfDiffSis.append('a' + (listOfDiffSis[i] - 10))
     }
-    return strOfDiffSis.toString().reversed()
+    return strOfDiffSis.toString()
 }
 
 /**
