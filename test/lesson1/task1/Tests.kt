@@ -105,4 +105,10 @@ class Tests {
         assertEquals(874, numberRevert(478))
         assertEquals(201, numberRevert(102))
     }
+
+    @Test
+    fun binarySearching() {
+        assertEquals(true, binarySearching(listOf(1, 2, 3, 4, 5, 6), 3))
+        assertEquals(true, binarySearching(listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11), 11))
+    }
 }
