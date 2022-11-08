@@ -110,7 +110,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     for ((key, value) in a) {
-        if (key in b && value == b[key]) return true
+        if (value == b[key]) return true
     }
     return false
 }
@@ -142,15 +142,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val list = mutableListOf<String>()
-    for (i in a.indices) {
-        for (j in b.indices) {
-            if (a[i] == b[j] && a[i] !in list) list += a[i]
-        }
-    }
-    return list
-}
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = (a.toSet().intersect(b.toSet())).toList()
 
 /**
  * Средняя (3 балла)
@@ -172,7 +164,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val resMap = mapA.toMutableMap()
     for ((key, value) in mapB) {
-        if (resMap.containsKey(key) && value != resMap[key]) {
+        if (key in resMap && value != resMap[key]) {
             val newValue = resMap[key] + ", $value"
             resMap[key] = newValue
         } else resMap[key] = value
