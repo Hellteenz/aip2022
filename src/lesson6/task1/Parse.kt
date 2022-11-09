@@ -148,7 +148,7 @@ fun flattenPhoneNumber(phone: String): String {
     }
     return strToReturn
 }
-
+//a
 /**
  * Средняя (5 баллов)
  *
