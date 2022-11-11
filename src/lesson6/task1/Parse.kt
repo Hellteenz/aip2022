@@ -196,13 +196,16 @@ fun plusMinus(expression: String): Int {
     val symbols = listOf("+", "-")
     if (exList[0] in symbols) throw IllegalArgumentException("Неверный формат")
     var cnt = exList[0].toInt()
-    if (exList.size == 1 && exList[0].length > 1 && !exList[0][0].isDigit()) throw IllegalArgumentException("Неверный формат")
+    if (exList.size == 1 && exList[0].length > 1 && !(exList[0][0].isDigit())) throw IllegalArgumentException("Неверный формат")
     for (i in 1 until exList.size step 2) {
-        if (exList[i] in symbols && exList[i + 1] in symbols || exList[i] !in symbols && exList[i + 1] !in symbols || exList[i].length > 1 && !(exList[i][0].isDigit())) throw IllegalArgumentException(
-            "Неверный формат"
-        )
+        for (check in 1 until exList.size) {
+            if (exList[i] in symbols && exList[i + 1] in symbols || exList[i] !in symbols && exList[i + 1] !in symbols || exList[check].length > 1 && !(exList[check][0].isDigit())) throw IllegalArgumentException(
+                "Неверный формат"
+            )
+        }
         if (exList[i] == "+") cnt += exList[i + 1].toInt()
         if (exList[i] == "-") cnt -= exList[i + 1].toInt()
+
     }
     return cnt
 }
