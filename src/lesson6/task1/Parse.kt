@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
 import lesson2.task2.year04
 import kotlin.text.*
 
@@ -93,18 +94,10 @@ fun dateStrToDigit(str: String): String {
         "декабря"
     )
     val parts = str.split(" ")
-    val month: Int
     if (parts.size == 3) {
-        if (parts[1] in months) month = months.indexOf(parts[1]) + 1 else return ""
-        val day = parts[0].toInt()
-        if (day > 31) return ""
-        val year = parts[2].toInt()
-        if (parts[1] in listOf("апреля", "июня", "сентября", "ноября") && day > 30) return ""
-        if (parts[1] == "февраля") {
-            if (year04(year) == 1 && day > 29) return ""
-            if (year04(year) == 0 && day > 28) return ""
-        }
-        return String.format("%02d.%02d.%d", day, month, year)
+        if (parts[1] !in months) return ""
+        if (parts[0].toInt() > 31 || daysInMonth(months.indexOf(parts[1]) + 1, parts[2].toInt()) < parts[0].toInt()) return ""
+        return String.format("%02d.%02d.%d", parts[0].toInt(), months.indexOf(parts[1]) + 1, parts[2].toInt())
     }
     return ""
 }
@@ -136,17 +129,11 @@ fun dateDigitToStr(digital: String): String = TODO()
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
+    val phoneNumber = phone.split("")
     val fillerSet = setOf("-", "(", ")", " ", "")
-    val correctSymbols = setOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+")
-    var phoneNumber = phone.split("")
-    if (phoneNumber.indexOf("(") == phoneNumber.indexOf(")") - 1) return ""
-    var strToReturn = ""
-    phoneNumber = phoneNumber.filter { it !in fillerSet }
-    for (i in phoneNumber.indices) {
-        if (phoneNumber[i] in correctSymbols) strToReturn += phoneNumber[i]
-        else return ""
-    }
-    return strToReturn
+    return if (Regex("""\+? *[\d\-\s]* *(\( *[\d\-\s]+ *\))? *[\d\-\s]*""").matches(phone))
+        phoneNumber.filter { it !in fillerSet }.joinToString(separator = "")
+    else ""
 }
 
 /**
