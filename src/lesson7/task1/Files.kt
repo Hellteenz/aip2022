@@ -124,10 +124,11 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var cnt = 0
-    for (line in File(inputName).readLines()) {
+    val readenFile = File(inputName).readLines()
+    for (line in readenFile) {
         cnt = maxOf(line.trim().length, cnt)
     }
-    for (line in File(inputName).readLines()) {
+    for (line in readenFile) {
         writer.write(" ".repeat((cnt - line.trim().length) / 2) + line.trim())
         writer.newLine()
     }
