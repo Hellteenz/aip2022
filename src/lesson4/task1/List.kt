@@ -122,7 +122,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = if (v.isNotEmpty()) sqrt(v.sumOf { it * it }) else 0.0
+fun abs(v: List<Double>): Double = sqrt(v.sumOf { it * it })
 
 /**
  * Простая (2 балла)
@@ -244,8 +244,8 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val strOfDiffSis = StringBuilder()
-    val listOfDiffSis = convert(n, base).toMutableList()
-    for (i in 0 until listOfDiffSis.size) {
+    val listOfDiffSis = convert(n, base)
+    for (i in listOfDiffSis.indices) {
         if (listOfDiffSis[i] < 10) strOfDiffSis.append(listOfDiffSis[i].toString())
         else strOfDiffSis.append('a' + (listOfDiffSis[i] - 10))
     }
@@ -302,15 +302,15 @@ fun roman(n: Int): String {
     val arabNum = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     var dupN = n
     var incIndicator = 0
-    var stringToReturn = ""
+    var stringToReturn = StringBuilder()
     while (dupN > 0) {
         while (dupN - arabNum[incIndicator] >= 0) {
-            stringToReturn += romanNum[incIndicator]
+            stringToReturn.append(romanNum[incIndicator])
             dupN -= arabNum[incIndicator]
         }
         incIndicator++
     }
-    return stringToReturn
+    return stringToReturn.toString()
 }
 
 /**
