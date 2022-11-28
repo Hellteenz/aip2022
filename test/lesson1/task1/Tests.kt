@@ -1,5 +1,7 @@
 package lesson1.task1
 
+import lesson6.task1.computeDeviceCells
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -110,5 +112,42 @@ class Tests {
     fun binarySearching() {
         assertEquals(true, binarySearching(listOf(1, 2, 3, 4, 5, 6), 3))
         assertEquals(true, binarySearching(listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11), 11))
+    }
+
+    @Test
+    fun fastSearchingPhone() {
+        assertEquals(listOf("Maxim", "Oczin"), fastSearchingPhone(listOf("Maxim", "Oleg", "Oczin"), "62946"))
+        assertEquals(
+            listOf("Vladimir", "Tkafinis", "Vladimir"),
+            fastSearchingPhone(listOf("Alexander", "Vladimir", "Anna", "Tkafinis", "Vladimir"), "85234647")
+        )
+        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Ion12"), "210") }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("maxim"), "210") }
+        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Maxim"), "ac21") }
+    }
+
+    @Test
+    fun neighbors() {
+        assertEquals(
+            "1",
+            neighbors(
+                listOf(
+                    "Иванов Петр: улица Ленина, 41, кв. 2",
+                    "Ульянова Анна: улица Ленина, 41, кв. 45",
+                    "Сазанов Кирилл: улица Демидовская, 32, кв. 4"
+                ),
+                "Иванов Петр, Ульянова Анна"
+            )
+        )
+        //assertEquals(true, neighbors(listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11), 11))
+    }
+
+    @Test
+    fun myFun() {
+        assertEquals("ООО Горняк - 12000.0, Сбербанк - 17100.0", myFun(mapOf("Производство напитков" to 4, "Горнодобыв пром" to 12, "Банковские операции" to 9), """ООО Горняк - Горнодобыв пром - 100000 
+            |Сбербанк - Банковские операции - 190000""".trimMargin()
+            )
+        )
+        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Maxim"), "ac21") }
     }
 }
