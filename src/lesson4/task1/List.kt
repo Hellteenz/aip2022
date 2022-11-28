@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
+import ru.spbstu.wheels.NullableMonad.filter
 import kotlin.math.sqrt
 import kotlin.math.pow
 
@@ -99,13 +100,15 @@ fun squares(vararg array: Int) = squares(array.toList()).toTypedArray()
  * Пробелы не следует принимать во внимание при сравнении символов, например, строка
  * "А роза упала на лапу Азора" является палиндромом.
  */
-fun isPalindrome(str: String): Boolean {
-    val lowerCase = str.lowercase().filter { it != ' ' }
-    for (i in 0..lowerCase.length / 2) {
-        if (lowerCase[i] != lowerCase[lowerCase.length - i - 1]) return false
-    }
-    return true
-}
+//fun isPalindrome(str: String): Boolean {
+//    val lowerCase = str.lowercase().filter { it != " " }
+//    if (lowerCase != null) {
+//        for (i in 0..lowerCase.length / 2) {
+//            if (lowerCase[i] != lowerCase[lowerCase.length - i - 1]) return false
+//        }
+//    }
+//    return true
+//}
 
 /**
  * Пример
@@ -302,7 +305,7 @@ fun roman(n: Int): String {
     val arabNum = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     var dupN = n
     var incIndicator = 0
-    var stringToReturn = StringBuilder()
+    val stringToReturn = StringBuilder()
     while (dupN > 0) {
         while (dupN - arabNum[incIndicator] >= 0) {
             stringToReturn.append(romanNum[incIndicator])
@@ -320,5 +323,7 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    TODO()
+}
 
