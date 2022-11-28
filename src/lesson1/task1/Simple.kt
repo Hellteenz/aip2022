@@ -3,6 +3,8 @@
 package lesson1.task1
 
 // import kotlin.math.*
+import ru.spbstu.wheels.joinToString
+import java.lang.StringBuilder
 import kotlin.math.PI
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -154,4 +156,117 @@ fun binarySearching(sorted: List<Int>, number: Int): Boolean {
     return false
 }
 
+/**
+ * Быстрый поиск в телефонном справочнике
+ * Имеется старый добрый телефон с клавиатурой вида:
+ *                  ABC(2)   DEF(3)
+ *       GHI(4)     JKL(5)   MNO(6)
+ *       PQRS(7)    TUV(8)   WXYZ(9)
+ *
+ * Дан список имен в телефонном справочнике.
+ * Для быстрого доступа к необходимому контакту в строке поиска
+ * телефонного справочника можно вводить цифры, соответствующие
+ * буквам искомого имени. Например, для поиска контакта с именем
+ * Maxim необходимо ввести последовательность “62946”. Для списка
+ * имен и цифровой последовательности необходимо вывести список
+ * контактов, имена которых можно получить, введя в телефонный
+ * справочник данную последовательность.
+ *
+ * Имя функции и тип результата функции предложить самостоятельно;
+ * в задании указан тип Collection<Any>,
+ * то есть коллекция объектов произвольного типа,
+ * можно (и нужно) изменить как вид коллекции,
+ * так и тип её элементов.
+ *
+ * Кроме функции, следует написать тесты,
+ * подтверждающие её работоспособность.
+ */
+fun fastSearchingPhone(names: List<String>, digits: String): List<String> {
+    val listToReturn = mutableListOf<String>()
+    val phone = mapOf(
+        "A" to "2", "B" to "2", "C" to "2",
+        "D" to "3", "E" to "3", "F" to "3",
+        "G" to "4", "H" to "4", "I" to "4",
+        "J" to "5", "K" to "5", "L" to "5",
+        "M" to "6", "N" to "6", "O" to "6",
+        "P" to "7", "Q" to "7", "R" to "7", "S" to "7",
+        "T" to "8", "U" to "8", "V" to "8",
+        "W" to "9", "X" to "9", "Y" to "9", "Z" to "9"
+    )
+    if (names.all { Regex("""[A-Z][a-z]*""").matches(it) } && Regex("\\d*").matches(digits)) {
+        val checkListToReturn = mutableListOf<String>()
+        var nameStr = StringBuilder()
+        names.forEach { it.forEach { name ->
+                nameStr.append(phone.getValue(name.uppercase()))
+            }
+            checkListToReturn += nameStr.toString()
+            nameStr.clear()
+        }
+        for (num in checkListToReturn.indices) {
+            if (checkListToReturn[num] == digits) listToReturn += names[num]
+        }
+        return listToReturn
+    }
+    throw IllegalArgumentException()
+}
 
+
+/**
+ * Список соседей
+ * На вход функции подается список строк в формате
+ * “Иванов Петр: улица Ленина, 41, кв. 2”
+ * Каждая строка начинается с фамилии и имени человека (разделенных
+ * одним пробелом), далее через запятую пробел(ы) следует адрес:
+ * название улицы (может состоять из нескольких слов через
+ * один пробел),
+ * номер дома (целое число) и номер квартиры
+ * (с префиксом “кв.”; целое число).
+ *
+ * На вход также подается имя человека.
+ *
+ * Вернуть список людей, которые являются соседями
+ * указанного человека
+ * (соседями считаются люди, которые живут в одном доме).
+ *
+ * Имя функции и тип результата функции предложить самостоятельно;
+ * в задании указан тип Collection<Any>,
+ * то есть коллекция объектов произвольного типа,
+ * можно (и нужно) изменить как вид коллекции,
+ * так и тип её элементов.
+ *
+ * При нарушении формата входной строки,
+ * бросить IllegalArgumentException
+ *
+ * Кроме функции, следует написать тесты,
+ * подтверждающие её работоспособность.
+ *
+ */
+fun neighbors(addresses: List<String>, person: String): String {
+    addresses.forEach { line ->
+        if (!Regex("""[А-Я][а-я]* [А-Я][а-я]*: улица [А-Я][а-я]*, \d+, кв. \d+""").matches(line)) throw IllegalArgumentException()
+    }
+    val homeMap = mutableListOf<String>()
+    addresses.forEach { line ->
+        homeMap += "${line.split(",")[1].trim().toInt()}=${line.split(":").first()}"
+    }
+    homeMap.groupBy({ it.split("=").first() }, { it.split("=").last() })
+    println(homeMap)
+    return "1"
+}
+
+fun myFun(table: Map<String, Int>, taxes: String): String {
+    val listOfRes = mutableMapOf<String, Double>()
+    taxes.split("\n").forEach {
+        if (!Regex("""([а-яё]+ )?[а-яё]+ - [а-яё]+ [а-яё]+ - \d+""").matches(
+                it.lowercase().trim()
+            )
+        ) throw IllegalArgumentException()
+//        val (name, type, income) = it.split(" - ")
+//        val finalTax = table[name] ?: 13
+        listOfRes += if (it.split(" - ")[1] in table.keys)
+            it.split(" - ")[0] to it.split(" - ")[2].trim()
+                .toInt() * ((table.getValue(it.split(" - ")[1].trim()) * 0.01))
+        else it.split(" - ")[0] to it.split(" - ")[2].trim().toInt() * 0.13
+    }
+    return listOfRes.joinToString { s, d -> "$s - $d" }
+}
