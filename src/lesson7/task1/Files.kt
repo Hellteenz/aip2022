@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
 import java.util.*
 
 // Урок 7: работа с файлами
@@ -254,9 +255,9 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var check = mutableListOf<String>()
+    val check = mutableListOf<String>()
     var maxLen = 0
-    var textToReturn = mutableListOf<String>()
+    val textToReturn = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
         val lineToLow = line.lowercase(Locale.getDefault()).split("")
         for (i in line.indices) {
@@ -318,9 +319,100 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    writer.write(
+        """<html> 
+            |<body>
+            |<p>
+        """.trimMargin()
+    )
+    writer.newLine()
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) {
+            writer.write(
+                """</p>
+                |<p>
+            """.trimMargin()
+            )
+            writer.newLine()
+        } else {
+            val checkLine = line.split(" ")
+            checkLine.forEach { element ->
+                var regexEL = element
+                if (!Regex("""[A-zА-я.,]*""").matches(element)) {
+                    while ("~~" in regexEL) {
+                        if (Regex("""[A-zА-я.,*<>]~~[A-zА-я,.*<>]*~~[A-zА-я.,*<>]""").matches(regexEL))
+                            regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
+                                .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
+                        if (regexEL.indexOf('~') < regexEL.length / 2)
+                            regexEL = "<s>" + regexEL.substringBefore("~~") + regexEL.substringAfter("~~")
+                        if (regexEL.indexOf('~') >= regexEL.length / 2)
+                            regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
+                    }
+                    while ("**" in regexEL) {
+                        if (Regex("""[A-zА-я.,*<>]\*\*[A-zА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
+                            regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
+                                .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
+                        if (regexEL.indexOf("**") < regexEL.length / 2)
+                            regexEL = "<b>" + regexEL.substringBefore("**") + regexEL.substringAfter("**")
+                        if (regexEL.indexOf("**") >= regexEL.length / 2)
+                            regexEL = regexEL.substringBefore("**") + "</b>" + regexEL.substringAfter("**")
+                    }
+                    while ("*" in regexEL) {
+                        if (Regex("""[A-zА-я.,<>]\*[A-zА-я,.<>]*\*[A-zА-я.,<>]""").matches(regexEL))
+                            regexEL = regexEL.substringBefore("*") + "<i>" + regexEL.substringAfter("*")
+                                .substringBefore("*") + "</i>" + regexEL.substringAfterLast("*")
+                        if (regexEL.indexOf('*') < regexEL.length / 2)
+                            regexEL = "<i>" + regexEL.substringBefore("*") + regexEL.substringAfter("*")
+                        if (regexEL.indexOf('*') >= regexEL.length / 2)
+                            regexEL = regexEL.substringBefore("*") + "</i>" + regexEL.substringAfter("*")
+                    }
+                }
+                writer.write(regexEL)
+                writer.newLine()
+            }
+        }
+    }
+    writer.write(
+        """ </p>
+        |</body>
+        |</html>
+    """.trimMargin()
+    )
+    writer.close()
 }
 
+
+fun main(){
+    var regexEL = "*suscipit*~~,"
+    while ("~~" in regexEL) {
+        if (Regex("""[A-zА-я.,*<>]~~[A-zА-я,.*<>]*~~[A-zА-я.,*<>]""").matches(regexEL))
+            regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
+                .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
+        if (regexEL.indexOf('~') < regexEL.length / 2)
+            regexEL = "<s>" + regexEL.substringBefore("~~") + regexEL.substringAfter("~~")
+        if (regexEL.indexOf('~') >= regexEL.length / 2)
+            regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
+    }
+    while ("**" in regexEL) {
+        if (Regex("""[A-zА-я.,*<>]\*\*[A-zА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
+            regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
+                .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
+        if (regexEL.indexOf("**") < regexEL.length / 2)
+            regexEL = "<b>" + regexEL.substringBefore("**") + regexEL.substringAfter("**")
+        if (regexEL.indexOf("**") >= regexEL.length / 2)
+            regexEL = regexEL.substringBefore("**") + "</b>" + regexEL.substringAfter("**")
+    }
+    while ("*" in regexEL) {
+        if (Regex("""[A-zА-я.,<>]\*[A-zА-я,.<>]*\*[A-zА-я.,<>]""").matches(regexEL))
+            regexEL = regexEL.substringBefore("*") + "<i>" + regexEL.substringAfter("*")
+                .substringBefore("*") + "</i>" + regexEL.substringAfterLast("*")
+        if (regexEL.indexOf('*') < regexEL.length / 2)
+            regexEL = "<i>" + regexEL.substringBefore("*") + regexEL.substringAfter("*")
+        if (regexEL.indexOf('*') >= regexEL.length / 2)
+            regexEL = regexEL.substringBefore("*") + "</i>" + regexEL.substringAfter("*")
+    }
+}
 /**
  * Сложная (23 балла)
  *
