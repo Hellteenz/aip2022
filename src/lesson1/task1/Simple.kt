@@ -261,12 +261,11 @@ fun myFun(table: Map<String, Int>, taxes: String): String {
                 it.lowercase().trim()
             )
         ) throw IllegalArgumentException()
-//        val (name, type, income) = it.split(" - ")
+        val (name, type, income) = it.split(" - ")
 //        val finalTax = table[name] ?: 13
-        listOfRes += if (it.split(" - ")[1] in table.keys)
-            it.split(" - ")[0] to it.split(" - ")[2].trim()
-                .toInt() * ((table.getValue(it.split(" - ")[1].trim()) * 0.01))
-        else it.split(" - ")[0] to it.split(" - ")[2].trim().toInt() * 0.13
+        listOfRes += if (type in table.keys)
+            name to income.trim().toInt() * ((table.getValue(type.trim()) * 0.01))
+        else name to income.trim().toInt() * 0.13
     }
     return listOfRes.joinToString { s, d -> "$s - $d" }
 }
