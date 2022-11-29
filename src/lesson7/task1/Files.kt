@@ -339,9 +339,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             val checkLine = line.split(" ")
             checkLine.forEach { element ->
                 var regexEL = element
-                if (!Regex("""[A-zА-я.,]*""").matches(element)) {
+                if (!Regex("""[^~*]*""").matches(element)) {
                     while ("~~" in regexEL) {
-                        if (Regex("""[A-zА-я.,*<>]~~[A-zА-я,.*<>]*~~[A-zА-я.,*<>]""").matches(regexEL))
+                        if (Regex("""[^~]~~[^~]~~[^~]""").matches(regexEL))
                             regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
                                 .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
                         if (regexEL.indexOf('~') < regexEL.length / 2)
@@ -350,7 +350,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
                     }
                     while ("**" in regexEL) {
-                        if (Regex("""[A-zА-я.,*<>]\*\*[A-zА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
+                        if (Regex("""[^~]\*\*[^~]*\*\*[^~]""").matches(regexEL))
                             regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
                                 .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
                         if (regexEL.indexOf("**") < regexEL.length / 2)
@@ -359,7 +359,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                             regexEL = regexEL.substringBefore("**") + "</b>" + regexEL.substringAfter("**")
                     }
                     while ("*" in regexEL) {
-                        if (Regex("""[A-zА-я.,<>]\*[A-zА-я,.<>]*\*[A-zА-я.,<>]""").matches(regexEL))
+                        if (Regex("""[^~*]\*[^~*]*\*[^~*]""").matches(regexEL))
                             regexEL = regexEL.substringBefore("*") + "<i>" + regexEL.substringAfter("*")
                                 .substringBefore("*") + "</i>" + regexEL.substringAfterLast("*")
                         if (regexEL.indexOf('*') < regexEL.length / 2)
@@ -384,9 +384,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
 fun main(){
-    var regexEL = "*suscipit*~~,"
+    var regexEL = """"""
     while ("~~" in regexEL) {
-        if (Regex("""[A-zА-я.,*<>]~~[A-zА-я,.*<>]*~~[A-zА-я.,*<>]""").matches(regexEL))
+        if (Regex("""[\wА-я.,*<>]~~[\wА-я,.*<>]*~~[\wА-я.,*<>]""").matches(regexEL))
             regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
                 .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
         if (regexEL.indexOf('~') < regexEL.length / 2)
@@ -395,7 +395,7 @@ fun main(){
             regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
     }
     while ("**" in regexEL) {
-        if (Regex("""[A-zА-я.,*<>]\*\*[A-zА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
+        if (Regex("""[\wА-я.,*<>]\*\*[\wА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
             regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
                 .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
         if (regexEL.indexOf("**") < regexEL.length / 2)
