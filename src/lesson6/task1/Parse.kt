@@ -95,9 +95,10 @@ fun dateStrToDigit(str: String): String {
     )
     val parts = str.split(" ")
     if (parts.size == 3) {
-        if (parts[1] !in months) return ""
-        if (parts[0].toInt() > 31 || daysInMonth(months.indexOf(parts[1]) + 1, parts[2].toInt()) < parts[0].toInt()) return ""
-        return String.format("%02d.%02d.%d", parts[0].toInt(), months.indexOf(parts[1]) + 1, parts[2].toInt())
+        val (day, month, year) = parts
+        if (month !in months) return ""
+        if (day.toInt() > 31 || daysInMonth(months.indexOf(month) + 1, year.toInt()) < day.toInt()) return ""
+        return String.format("%02d.%02d.%d", day.toInt(), months.indexOf(month) + 1, year.toInt())
     }
     return ""
 }
