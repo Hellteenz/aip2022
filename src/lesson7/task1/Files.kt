@@ -336,41 +336,29 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             )
             writer.newLine()
         } else {
-            val checkLine = line.split(" ")
-            checkLine.forEach { element ->
-                var regexEL = element
-                if (!Regex("""[^~*]*""").matches(element)) {
-                    while ("~~" in regexEL) {
-                        if (Regex("""[^~]~~[^~]~~[^~]""").matches(regexEL))
-                            regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
-                                .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
-                        if (regexEL.indexOf('~') < regexEL.length / 2)
-                            regexEL = "<s>" + regexEL.substringBefore("~~") + regexEL.substringAfter("~~")
-                        if (regexEL.indexOf('~') >= regexEL.length / 2)
-                            regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
-                    }
-                    while ("**" in regexEL) {
-                        if (Regex("""[^~]\*\*[^~]*\*\*[^~]""").matches(regexEL))
-                            regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
-                                .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
-                        if (regexEL.indexOf("**") < regexEL.length / 2)
-                            regexEL = "<b>" + regexEL.substringBefore("**") + regexEL.substringAfter("**")
-                        if (regexEL.indexOf("**") >= regexEL.length / 2)
-                            regexEL = regexEL.substringBefore("**") + "</b>" + regexEL.substringAfter("**")
-                    }
-                    while ("*" in regexEL) {
-                        if (Regex("""[^~*]\*[^~*]*\*[^~*]""").matches(regexEL))
-                            regexEL = regexEL.substringBefore("*") + "<i>" + regexEL.substringAfter("*")
-                                .substringBefore("*") + "</i>" + regexEL.substringAfterLast("*")
-                        if (regexEL.indexOf('*') < regexEL.length / 2)
-                            regexEL = "<i>" + regexEL.substringBefore("*") + regexEL.substringAfter("*")
-                        if (regexEL.indexOf('*') >= regexEL.length / 2)
-                            regexEL = regexEL.substringBefore("*") + "</i>" + regexEL.substringAfter("*")
-                    }
-                }
-                writer.write(regexEL)
-                writer.newLine()
+            var splitLine = line.split("~~")
+            var stringToReturn = String()
+            splitLine.forEach {
+                stringToReturn += it
+                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<s>"
+                else if (it != splitLine.last()) "</s>" else ""
             }
+            splitLine = stringToReturn.trim().split("**")
+            stringToReturn = String()
+            splitLine.forEach {
+                stringToReturn += it
+                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<b>"
+                else if (it != splitLine.last()) "</b>" else ""
+            }
+            splitLine = stringToReturn.trim().split("*")
+            stringToReturn = String()
+            splitLine.forEach {
+                stringToReturn += it
+                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<i>"
+                else if (it != splitLine.last()) "</i>" else ""
+            }
+            writer.write(stringToReturn)
+            writer.newLine()
         }
     }
     writer.write(
