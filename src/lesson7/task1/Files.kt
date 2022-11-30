@@ -337,34 +337,25 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             writer.newLine()
         } else {
             if (!Regex("""[^~*]*""").matches(line)) {
-                var splitLine = line.split("~~")
-                var stringToReturn = splitLine.joinToString(separator = "")
-                if (splitLine.size > 1) {
-                    stringToReturn = String()
-                    splitLine.forEach {
-                        stringToReturn += it
-                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<s>"
-                        else "</s>"
+                var stringToReturn = line
+                fun clearRegex(reg: String, stringToReturn: String): String {
+                    val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
+                    val splitLine = stringToReturn.split(reg)
+                    if (splitLine.size > 1) {
+                        var stringToFun = String()
+                        splitLine.forEach {
+                            stringToFun += it
+                            stringToFun += if (it == splitLine.last()) "" else
+                                if (splitLine.indexOf(it) % 2 == 0) "<$word>"
+                                else "</$word>"
+                        }
+                        return stringToFun
                     }
+                    return stringToReturn
                 }
-                splitLine = stringToReturn.trim().split("**")
-                if (splitLine.size > 1) {
-                    stringToReturn = String()
-                    splitLine.forEach {
-                        stringToReturn += it
-                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<b>"
-                        else "</b>"
-                    }
-                }
-                splitLine = stringToReturn.trim().split("*")
-                if (splitLine.size > 1) {
-                    stringToReturn = String()
-                    splitLine.forEach {
-                        stringToReturn += it
-                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<i>"
-                        else "</i>"
-                    }
-                }
+                stringToReturn = clearRegex("~~", stringToReturn)
+                stringToReturn = clearRegex("**", stringToReturn)
+                stringToReturn = clearRegex("*", stringToReturn)
                 writer.write(stringToReturn)
                 writer.newLine()
             } else {
@@ -384,34 +375,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
 fun main(){
-    var regexEL = """"""
-    while ("~~" in regexEL) {
-        if (Regex("""[\wА-я.,*<>]~~[\wА-я,.*<>]*~~[\wА-я.,*<>]""").matches(regexEL))
-            regexEL = regexEL.substringBefore("~~") + "<s>" + regexEL.substringAfter("~~")
-                .substringBefore("~~") + "</s>" + regexEL.substringAfterLast("~~")
-        if (regexEL.indexOf('~') < regexEL.length / 2)
-            regexEL = "<s>" + regexEL.substringBefore("~~") + regexEL.substringAfter("~~")
-        if (regexEL.indexOf('~') >= regexEL.length / 2)
-            regexEL = regexEL.substringBefore("~~") + "</s>" + regexEL.substringAfter("~~")
-    }
-    while ("**" in regexEL) {
-        if (Regex("""[\wА-я.,*<>]\*\*[\wА-я,.*<>]*\*\*[A-zА-я.,*<>]""").matches(regexEL))
-            regexEL = regexEL.substringBefore("**") + "<b>" + regexEL.substringAfter("**")
-                .substringBefore("**") + "</b>" + regexEL.substringAfterLast("**")
-        if (regexEL.indexOf("**") < regexEL.length / 2)
-            regexEL = "<b>" + regexEL.substringBefore("**") + regexEL.substringAfter("**")
-        if (regexEL.indexOf("**") >= regexEL.length / 2)
-            regexEL = regexEL.substringBefore("**") + "</b>" + regexEL.substringAfter("**")
-    }
-    while ("*" in regexEL) {
-        if (Regex("""[A-zА-я.,<>]\*[A-zА-я,.<>]*\*[A-zА-я.,<>]""").matches(regexEL))
-            regexEL = regexEL.substringBefore("*") + "<i>" + regexEL.substringAfter("*")
-                .substringBefore("*") + "</i>" + regexEL.substringAfterLast("*")
-        if (regexEL.indexOf('*') < regexEL.length / 2)
-            regexEL = "<i>" + regexEL.substringBefore("*") + regexEL.substringAfter("*")
-        if (regexEL.indexOf('*') >= regexEL.length / 2)
-            regexEL = regexEL.substringBefore("*") + "</i>" + regexEL.substringAfter("*")
-    }
+    var reg = "~~"
+    if (reg == "~~") reg = "s"
+    if (reg == "**") reg == "b"
+    if (reg == "*") reg == "i"
+    println(reg)
 }
 /**
  * Сложная (23 балла)
