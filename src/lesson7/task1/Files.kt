@@ -336,29 +336,41 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             )
             writer.newLine()
         } else {
-            var splitLine = line.split("~~")
-            var stringToReturn = String()
-            splitLine.forEach {
-                stringToReturn += it
-                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<s>"
-                else if (it != splitLine.last()) "</s>" else ""
+            if (!Regex("""[^~*]*""").matches(line)) {
+                var splitLine = line.split("~~")
+                var stringToReturn = splitLine.joinToString(separator = "")
+                if (splitLine.size > 1) {
+                    stringToReturn = String()
+                    splitLine.forEach {
+                        stringToReturn += it
+                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<s>"
+                        else "</s>"
+                    }
+                }
+                splitLine = stringToReturn.trim().split("**")
+                if (splitLine.size > 1) {
+                    stringToReturn = String()
+                    splitLine.forEach {
+                        stringToReturn += it
+                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<b>"
+                        else "</b>"
+                    }
+                }
+                splitLine = stringToReturn.trim().split("*")
+                if (splitLine.size > 1) {
+                    stringToReturn = String()
+                    splitLine.forEach {
+                        stringToReturn += it
+                        stringToReturn += if (it == splitLine.last()) "" else if (splitLine.indexOf(it) % 2 == 0) "<i>"
+                        else "</i>"
+                    }
+                }
+                writer.write(stringToReturn)
+                writer.newLine()
+            } else {
+                writer.write(line)
+                writer.newLine()
             }
-            splitLine = stringToReturn.trim().split("**")
-            stringToReturn = String()
-            splitLine.forEach {
-                stringToReturn += it
-                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<b>"
-                else if (it != splitLine.last()) "</b>" else ""
-            }
-            splitLine = stringToReturn.trim().split("*")
-            stringToReturn = String()
-            splitLine.forEach {
-                stringToReturn += it
-                stringToReturn += if (splitLine.indexOf(it) % 2 == 0 && it != splitLine.last()) "<i>"
-                else if (it != splitLine.last()) "</i>" else ""
-            }
-            writer.write(stringToReturn)
-            writer.newLine()
         }
     }
     writer.write(
