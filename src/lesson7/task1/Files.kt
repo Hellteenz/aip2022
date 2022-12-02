@@ -255,7 +255,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var maxLen = 0
     val textToReturn = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
         val check = mutableListOf<String>()
@@ -263,7 +262,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         for (i in line.indices) {
             if (lineToLow[i] != lineToLow[i + 1] && lineToLow[i] !in check) check += lineToLow[i] else break
         }
-        if (line.length == check.size && line.length >= maxLen) {
+        if (line.length == check.size) {
             textToReturn += line
         }
         check.clear()
@@ -319,6 +318,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    var fileToString = String()
     val writer = File(outputName).bufferedWriter()
     writer.write(
         """<html> 
@@ -329,40 +329,39 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     writer.newLine()
     for (line in File(inputName).readLines()) {
         if (line.isEmpty()) {
-            writer.write(
-                """</p>
+            fileToString += (
+                    """</p>
                 |<p>
             """.trimMargin()
-            )
-            writer.newLine()
-        } else {
-            if (!Regex("""[^~*]*""").matches(line)) {
-                var stringToReturn = line
-                fun clearRegex(reg: String, stringToReturn: String): String {
-                    val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
-                    val splitLine = stringToReturn.split(reg)
-                    if (splitLine.size > 1) {
-                        var stringToFun = String()
-                        splitLine.forEach {
-                            stringToFun += it
-                            stringToFun += if (it == splitLine.last()) "" else
-                                if (splitLine.indexOf(it) % 2 == 0) "<$word>"
-                                else "</$word>"
-                        }
-                        return stringToFun
-                    }
-                    return stringToReturn
+                    )
+            fileToString += "\n"
+        } else fileToString += line
+    }
+    if (!Regex("""[^~*]*""").matches(fileToString)) {
+        var stringToReturn = fileToString
+        fun clearRegex(reg: String, stringToReturn: String): String {
+            val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
+            val splitLine = stringToReturn.split(reg)
+            if (splitLine.size > 1) {
+                var stringToFun = String()
+                splitLine.forEach {
+                    stringToFun += it
+                    stringToFun += if (it == splitLine.last()) "" else
+                        if (splitLine.indexOf(it) % 2 == 0) "<$word>"
+                        else "</$word>"
                 }
-                stringToReturn = clearRegex("~~", stringToReturn)
-                stringToReturn = clearRegex("**", stringToReturn)
-                stringToReturn = clearRegex("*", stringToReturn)
-                writer.write(stringToReturn)
-                writer.newLine()
-            } else {
-                writer.write(line)
-                writer.newLine()
+                return stringToFun
             }
+            return stringToReturn
         }
+        stringToReturn = clearRegex("~~", stringToReturn)
+        stringToReturn = clearRegex("**", stringToReturn)
+        stringToReturn = clearRegex("*", stringToReturn)
+        writer.write(stringToReturn)
+        writer.newLine()
+    } else {
+        writer.write(fileToString)
+        writer.newLine()
     }
     writer.write(
         """ </p>
@@ -375,11 +374,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
 fun main(){
-    var reg = "~~"
-    if (reg == "~~") reg = "s"
-    if (reg == "**") reg == "b"
-    if (reg == "*") reg == "i"
-    println(reg)
 }
 /**
  * Сложная (23 балла)
