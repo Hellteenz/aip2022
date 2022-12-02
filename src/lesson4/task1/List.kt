@@ -4,7 +4,6 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
-import ru.spbstu.wheels.NullableMonad.filter
 import kotlin.math.sqrt
 import kotlin.math.pow
 
@@ -101,7 +100,7 @@ fun squares(vararg array: Int) = squares(array.toList()).toTypedArray()
  * "А роза упала на лапу Азора" является палиндромом.
  */
 fun isPalindrome(str: String): Boolean {
-    val lowerCase = str.lowercase().filter { it != " " }
+    val lowerCase = str.lowercase().filter { it != ' ' }
     if (lowerCase != null) {
         for (i in 0..lowerCase.length / 2) {
             if (lowerCase[i] != lowerCase[lowerCase.length - i - 1]) return false
@@ -323,5 +322,50 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val modTen = listOf("ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val modTenInCentre = listOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val hund = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val teens = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семьнадцать", "восемьнадцать", "девятнадцать")
+    val dozens = listOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val thus = listOf("тысяча", "тысячи", "тысяч")
+
+    var nStringZero = n.toString().reversed()
+    if (nStringZero.length < 6) {
+        nStringZero += "0".repeat(6 - nStringZero.length)
+        nStringZero.reversed()
+    }
+    val stringListToReturn =
+        (nStringZero.substring(0, 3) + "0" + nStringZero.substring(3, 6)).reversed().split("").toMutableList()
+    stringListToReturn.remove(stringListToReturn.first())
+    stringListToReturn.remove(stringListToReturn.last())
+
+    if (stringListToReturn[0] == "0") stringListToReturn[0] = " " else stringListToReturn[0] =
+        hund[stringListToReturn[0].toInt()]
+    if (stringListToReturn[1] == "0") stringListToReturn[1] = " " else {
+        if (stringListToReturn[1] == "1") {
+            stringListToReturn[1] = teens[stringListToReturn[2].toInt()]
+            stringListToReturn[2] = "0"
+        } else stringListToReturn[1] = dozens[stringListToReturn[1].toInt()]
+    }
+    if (stringListToReturn[2] == "0") stringListToReturn[2] = " " else stringListToReturn[2] =
+        modTenInCentre[stringListToReturn[2].toInt()]
+    if (n >= 1000) {
+        if (modTenInCentre.indexOf(stringListToReturn[2]) == 1) stringListToReturn[3] = thus[0]
+        if (modTenInCentre.indexOf(stringListToReturn[2]) in 2..4) stringListToReturn[3] = thus[1]
+        if (modTenInCentre.indexOf(stringListToReturn[2]) > 4 || stringListToReturn[2] == " ")
+            stringListToReturn[3] = thus[2]
+    } else stringListToReturn[3] = " "
+    if (stringListToReturn[4] == "0") stringListToReturn[4] = " " else stringListToReturn[4] =
+        hund[stringListToReturn[4].toInt()]
+    if (stringListToReturn[5] == "0") stringListToReturn[5] = " " else {
+        if (stringListToReturn[5] == "1") {
+            stringListToReturn[5] = teens[stringListToReturn[6].toInt()]
+            stringListToReturn[6] = "0"
+        } else stringListToReturn[5] = dozens[stringListToReturn[5].toInt()]
+    }
+    if (stringListToReturn[6] == "0") stringListToReturn[6] = " " else stringListToReturn[6] =
+        modTen[stringListToReturn[6].toInt()]
+    return stringListToReturn.filter { it != " " }.joinToString(separator = " ").trim()
+}
 
