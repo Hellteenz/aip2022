@@ -323,7 +323,7 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val modTen = listOf("ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val modTen = listOf(" ", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val modTenInCentre = listOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val hund = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val teens = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
@@ -364,8 +364,7 @@ fun russian(n: Int): String {
             stringListToReturn[6] = "0"
         } else stringListToReturn[5] = dozens[stringListToReturn[5].toInt()]
     }
-    if (stringListToReturn[6] == "0") stringListToReturn[6] = " " else stringListToReturn[6] =
-        modTen[stringListToReturn[6].toInt()]
+    stringListToReturn[6] = modTen[stringListToReturn[6].toInt()]
     return stringListToReturn.filter { it != " " }.joinToString(separator = " ").trim()
 }
 
