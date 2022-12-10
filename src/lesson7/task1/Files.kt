@@ -354,12 +354,13 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun clearRegex(reg: String, stringToReturn: String): String {
     val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
     val splitLine = stringToReturn.split(reg)
+    println(splitLine)
     if (splitLine.size > 1) {
         var stringToFun = String()
         splitLine.forEach {
             stringToFun += it
             stringToFun += if (it == splitLine.last()) "" else
-                if (splitLine.indexOf(it) % 2 == 0) "<$word>"
+                if (splitLine.indexOf(it) % 2 == 0 || it.isEmpty()) "<$word>"
                 else "</$word>"
         }
         return stringToFun
@@ -408,7 +409,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
 fun main() {
-    val a = "nonspace~~wwww~~nonspace"
+    val a = "nonspace~~wwww~~~~nonspace~~"
     val b = a.split("~~")
     println(b)
 }
