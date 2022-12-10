@@ -126,11 +126,11 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var cnt = 0
-    val readenFile = File(inputName).readLines()
-    for (line in readenFile) {
+    val readFile = File(inputName).readLines()
+    for (line in readFile) {
         cnt = maxOf(line.trim().length, cnt)
     }
-    for (line in readenFile) {
+    for (line in readFile) {
         writer.write(" ".repeat((cnt - line.trim().length) / 2) + line.trim())
         writer.newLine()
     }
@@ -165,7 +165,56 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val lineList = mutableListOf<String>()
+    File(inputName).readLines().forEach { lineList += it }
+    val maxLen = lineList.maxBy { it.length }.trim().length
+    lineList.forEach {
+        if (it.isEmpty()) {
+            writer.newLine()
+        } else {
+            val splLineStart = it.split(" ")
+            val lenPieceOfLine = mutableListOf<Int>()
+            val splLine = mutableListOf<String>()
+            splLineStart.forEach { piece ->
+                if (piece.isNotEmpty()) {
+                    lenPieceOfLine += piece.length
+                    splLine += piece
+                }
+            }
+            val needSpace = (maxLen - lenPieceOfLine.sum()) / lenPieceOfLine.size
+            val checkLineForReturn =
+                if (splLine.size > 1 && needSpace != 0) splLine.joinToString(separator = " ".repeat(needSpace))
+                else if (needSpace == 0) splLine.joinToString(separator = " ")
+                else splLine.joinToString(separator = "") + " ".repeat(needSpace)
+            if (checkLineForReturn.length == maxLen) writer.write(checkLineForReturn.trim())
+            else {
+                var lineToReturn = String()
+                var splLine = it.split(" ").filter { el -> el.isNotEmpty() }
+                var neededLen = maxLen - checkLineForReturn.length
+                val howManyWordsNeedSpace =
+                    if (neededLen < splLine.size) neededLen else neededLen - splLine.size
+                while (maxLen > lineToReturn.trim().length) {
+                    var addSpace = (maxLen - lenPieceOfLine.sum()) % lenPieceOfLine.size
+                    if (neededLen > splLine.size) {
+                        addSpace = (maxLen - lenPieceOfLine.sum()) % lenPieceOfLine.size
+                    }
+                    println(lineToReturn.trim().length)
+                    for (i in splLine.indices) {
+                        lineToReturn += splLine[i]
+                        lineToReturn += if (i < howManyWordsNeedSpace)
+                            " ".repeat(needSpace + addSpace)
+                        else " ".repeat(needSpace)
+                    }
+                    neededLen = maxLen - lineToReturn.length
+                    splLine = lineToReturn.split(" ".repeat(needSpace + addSpace))
+                }
+                writer.write(lineToReturn.trim())
+            }
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -254,22 +303,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    val textToReturn = mutableListOf<String>()
-    for (line in File(inputName).readLines()) {
-        val check = mutableListOf<String>()
-        val lineToLow = line.lowercase().split("")
-        for (i in line.indices) {
-            if (lineToLow[i] != lineToLow[i + 1] && lineToLow[i] !in check) check += lineToLow[i] else break
-        }
-        if (line.length == check.size) {
-            textToReturn += line
-        }
-        check.clear()
-    }
-    textToReturn.forEach { if (it.length != textToReturn.maxBy { max -> max.length }.length) textToReturn.remove(it) }
-    if (textToReturn.size > 0) writer.write(textToReturn.joinToString()) else writer.write("")
-    writer.close()
+    TODO()
 }
 
 /**
@@ -331,7 +365,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (line.isEmpty()) {
             fileToString += (
                     """</p>
-                |<p>
+                       |<p>
             """.trimMargin()
                     )
             fileToString += "\n"
@@ -373,7 +407,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 }
 
 
-fun main(){
+fun main() {
+    println(5 / 3)
 }
 /**
  * Сложная (23 балла)
