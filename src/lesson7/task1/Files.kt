@@ -351,6 +351,21 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun clearRegex(reg: String, stringToReturn: String): String {
+    val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
+    val splitLine = stringToReturn.split(reg)
+    if (splitLine.size > 1) {
+        var stringToFun = String()
+        splitLine.forEach {
+            stringToFun += it
+            stringToFun += if (it == splitLine.last()) "" else
+                if (splitLine.indexOf(it) % 2 == 0) "<$word>"
+                else "</$word>"
+        }
+        return stringToFun
+    }
+    return stringToReturn
+}
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var fileToString = String()
     val writer = File(outputName).bufferedWriter()
@@ -362,7 +377,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     )
     writer.newLine()
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
+        if (line.isEmpty() || line == "\n") {
             fileToString += (
                     """</p>
                        |<p>
@@ -373,21 +388,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
     if (!Regex("""[^~*]*""").matches(fileToString)) {
         var stringToReturn = fileToString
-        fun clearRegex(reg: String, stringToReturn: String): String {
-            val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
-            val splitLine = stringToReturn.split(reg)
-            if (splitLine.size > 1) {
-                var stringToFun = String()
-                splitLine.forEach {
-                    stringToFun += it
-                    stringToFun += if (it == splitLine.last()) "" else
-                        if (splitLine.indexOf(it) % 2 == 0) "<$word>"
-                        else "</$word>"
-                }
-                return stringToFun
-            }
-            return stringToReturn
-        }
         stringToReturn = clearRegex("~~", stringToReturn)
         stringToReturn = clearRegex("**", stringToReturn)
         stringToReturn = clearRegex("*", stringToReturn)
@@ -408,7 +408,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 
 fun main() {
-    println(5 / 3)
+    val a = "nonspace~~wwww~~nonspace"
+    val b = a.split("~~")
+    println(b)
 }
 /**
  * Сложная (23 балла)
