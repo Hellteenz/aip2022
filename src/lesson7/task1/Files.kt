@@ -3,8 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import java.lang.StringBuilder
-import java.util.*
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -182,35 +180,27 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                     splLine += piece
                 }
             }
-            val needSpace = (maxLen - lenPieceOfLine.sum()) / lenPieceOfLine.size
-            val checkLineForReturn =
-                if (splLine.size > 1 && needSpace != 0) splLine.joinToString(separator = " ".repeat(needSpace))
-                else if (needSpace == 0) splLine.joinToString(separator = " ")
-                else splLine.joinToString(separator = "") + " ".repeat(needSpace)
-            if (checkLineForReturn.length == maxLen) writer.write(checkLineForReturn.trim())
-            else {
-                var lineToReturn = String()
-                var splLine = it.split(" ").filter { el -> el.isNotEmpty() }
-                var neededLen = maxLen - checkLineForReturn.length
-                val howManyWordsNeedSpace =
-                    if (neededLen < splLine.size) neededLen else neededLen - splLine.size
-                while (maxLen > lineToReturn.trim().length) {
-                    var addSpace = (maxLen - lenPieceOfLine.sum()) % lenPieceOfLine.size
-                    if (neededLen > splLine.size) {
-                        addSpace = (maxLen - lenPieceOfLine.sum()) % lenPieceOfLine.size
+            var lineToReturn = String()
+            if (splLine.size == 1) {
+                lineToReturn = splLine.joinToString(separator = "")
+            } else if (splLine.size > 1) {
+                val needSpace = (maxLen - lenPieceOfLine.sum()) / (lenPieceOfLine.size - 1)
+                var addSpace = (maxLen - lenPieceOfLine.sum()) % (lenPieceOfLine.size - 1)
+                lineToReturn =
+                    if (needSpace == 1 && addSpace == 0) splLine.joinToString(separator = " ")
+                    else {
+                        var checkLineToReturn = String()
+                        for ((i, elementInSplLine) in splLine.withIndex()) {
+                            val addSpaceForRepeat = if (addSpace > 0) 1 else 0
+                            checkLineToReturn = if (i < splLine.size - 1) {
+                                checkLineToReturn + elementInSplLine + " ".repeat(needSpace + addSpaceForRepeat)
+                            } else checkLineToReturn + elementInSplLine
+                            if (addSpace > 0) addSpace--
+                        }
+                        checkLineToReturn
                     }
-                    println(lineToReturn.trim().length)
-                    for (i in splLine.indices) {
-                        lineToReturn += splLine[i]
-                        lineToReturn += if (i < howManyWordsNeedSpace)
-                            " ".repeat(needSpace + addSpace)
-                        else " ".repeat(needSpace)
-                    }
-                    neededLen = maxLen - lineToReturn.length
-                    splLine = lineToReturn.split(" ".repeat(needSpace + addSpace))
-                }
-                writer.write(lineToReturn.trim())
             }
+            writer.write(lineToReturn.trim())
             writer.newLine()
         }
     }
@@ -367,6 +357,7 @@ fun clearRegex(reg: String, stringToReturn: String): String {
     }
     return stringToReturn
 }
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var fileToString = String()
     val writer = File(outputName).bufferedWriter()
