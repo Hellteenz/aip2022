@@ -166,6 +166,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val lineList = mutableListOf<String>()
     File(inputName).readLines().forEach { lineList += it }
+    //
     if (lineList.isEmpty()) {
         writer.write("")
         writer.close()
