@@ -166,49 +166,50 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val lineList = mutableListOf<String>()
     File(inputName).readLines().forEach { lineList += it }
-    if (File(inputName).readText() == "") {
+    if (lineList.isEmpty()) {
         writer.write("")
         writer.close()
-    }
-    val maxLen = lineList.maxBy { it.length }.trim().length
-    lineList.forEach {
-        if (it.isEmpty()) {
-            writer.newLine()
-        } else {
-            val splLineStart = it.split(" ")
-            val lenPieceOfLine = mutableListOf<Int>()
-            val splLine = mutableListOf<String>()
-            splLineStart.forEach { piece ->
-                if (piece.isNotEmpty()) {
-                    lenPieceOfLine += piece.length
-                    splLine += piece
-                }
-            }
-            var lineToReturn = String()
-            if (splLine.size == 1) {
-                lineToReturn = splLine.joinToString(separator = "")
-            } else if (splLine.size > 1) {
-                val needSpace = (maxLen - lenPieceOfLine.sum()) / (lenPieceOfLine.size - 1)
-                var addSpace = (maxLen - lenPieceOfLine.sum()) % (lenPieceOfLine.size - 1)
-                lineToReturn =
-                    if (needSpace == 1 && addSpace == 0) splLine.joinToString(separator = " ")
-                    else {
-                        var checkLineToReturn = String()
-                        for ((i, elementInSplLine) in splLine.withIndex()) {
-                            val addSpaceForRepeat = if (addSpace > 0) 1 else 0
-                            checkLineToReturn = if (i < splLine.size - 1) {
-                                checkLineToReturn + elementInSplLine + " ".repeat(needSpace + addSpaceForRepeat)
-                            } else checkLineToReturn + elementInSplLine
-                            if (addSpace > 0) addSpace--
-                        }
-                        checkLineToReturn
+    } else {
+        val maxLen = lineList.maxBy { it.length }.trim().length
+        lineList.forEach {
+            if (it.isEmpty()) {
+                writer.newLine()
+            } else {
+                val splLineStart = it.split(" ")
+                val lenPieceOfLine = mutableListOf<Int>()
+                val splLine = mutableListOf<String>()
+                splLineStart.forEach { piece ->
+                    if (piece.isNotEmpty()) {
+                        lenPieceOfLine += piece.length
+                        splLine += piece
                     }
+                }
+                var lineToReturn = String()
+                if (splLine.size == 1) {
+                    lineToReturn = splLine.joinToString(separator = "")
+                } else if (splLine.size > 1) {
+                    val needSpace = (maxLen - lenPieceOfLine.sum()) / (lenPieceOfLine.size - 1)
+                    var addSpace = (maxLen - lenPieceOfLine.sum()) % (lenPieceOfLine.size - 1)
+                    lineToReturn =
+                        if (needSpace == 1 && addSpace == 0) splLine.joinToString(separator = " ")
+                        else {
+                            var checkLineToReturn = String()
+                            for ((i, elementInSplLine) in splLine.withIndex()) {
+                                val addSpaceForRepeat = if (addSpace > 0) 1 else 0
+                                checkLineToReturn = if (i < splLine.size - 1) {
+                                    checkLineToReturn + elementInSplLine + " ".repeat(needSpace + addSpaceForRepeat)
+                                } else checkLineToReturn + elementInSplLine
+                                if (addSpace > 0) addSpace--
+                            }
+                            checkLineToReturn
+                        }
+                }
+                writer.write(lineToReturn.trim())
+                writer.newLine()
             }
-            writer.write(lineToReturn.trim())
-            writer.newLine()
         }
+        writer.close()
     }
-    writer.close()
 }
 
 /**
