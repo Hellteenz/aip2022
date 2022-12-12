@@ -349,7 +349,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun clearRegex(reg: String, stringToReturn: String): String {
     val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
     val splitLine = stringToReturn.split(reg)
-    println(splitLine)
     if (splitLine.size > 1) {
         var stringToFun = String()
         splitLine.forEach {
@@ -363,45 +362,129 @@ fun clearRegex(reg: String, stringToReturn: String): String {
     return stringToReturn
 }
 
+fun clearByStack(lineElement: String): String {
+    var stringToReturn = String()
+    val stack = ArrayDeque<Int>()
+    var stars = 0
+    for (i in lineElement.indices) {
+        if (lineElement[i] == '*') {
+            stars++
+        } else if (stars > 0) {
+            if (stack.isEmpty()) {
+                stack.addLast(stars)
+                stringToReturn += when (stars) {
+                    1 -> "<i>"
+                    2 -> "<b>"
+                    3 -> "<b><i>"
+                    else -> ""
+                }
+            } else {
+                var starsFromStack = stack.removeLast()
+                if (stars == starsFromStack) {
+                    stringToReturn += when (stars) {
+                        1 -> "</i>"
+                        2 -> "</b>"
+                        3 -> "</i></b>"
+                        else -> ""
+                    }
+                } else if (stars == 3) {
+                    stringToReturn += when (starsFromStack) {
+                        1 -> "</i>"
+                        2 -> "</b>"
+                        else -> ""
+                    }
+                    if (stack.isEmpty()) {
+                        stack.addLast(stars - starsFromStack)
+                    } else {
+                        starsFromStack = stack.removeLast()
+                        stringToReturn += when (starsFromStack) {
+                            1 -> "</i>"
+                            2 -> "</b>"
+                            else -> ""
+                        }
+                    }
+                } else {
+                    stack.addLast(starsFromStack)
+                    stack.addLast(stars)
+                    stringToReturn += when (stars) {
+                        1 -> "<i>"
+                        2 -> "<b>"
+                        else -> ""
+                    }
+                }
+            }
+            stars = 0
+            stringToReturn += lineElement[i]
+        } else {
+            stringToReturn += lineElement[i]
+        }
+    }
+    return stringToReturn
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var fileToString = String()
     val writer = File(outputName).bufferedWriter()
     writer.write(
         """<html> 
             |<body>
-            |<p>
         """.trimMargin()
     )
     writer.newLine()
-    for (line in File(inputName).readLines()) {
-        if (line.isEmpty() || line == "\n") {
-            fileToString += (
-                    """</p>
-                       |<p>
-            """.trimMargin()
-                    )
-            fileToString += "\n"
-        } else fileToString += line
-    }
-    if (!Regex("""[^~*]*""").matches(fileToString)) {
-        var stringToReturn = fileToString
-        stringToReturn = clearRegex("~~", stringToReturn)
-        stringToReturn = clearRegex("**", stringToReturn)
-        stringToReturn = clearRegex("*", stringToReturn)
-        writer.write(stringToReturn)
-        writer.newLine()
-    } else {
-        writer.write(fileToString)
-        writer.newLine()
+    val lineList = mutableListOf<String>()
+    File(inputName).readLines().forEach { lineList += it }
+    if (lineList.isNotEmpty()) {
+        var isFirstParagraphExist = false
+        var isNewParagraph = false
+        var paragraphTagStart = false
+        lineList.forEach {
+            if (it.isEmpty() || it == "\n") {
+                isNewParagraph = true
+            } else {
+                if (!isFirstParagraphExist) {
+                    isFirstParagraphExist = true
+                    isNewParagraph = false
+                    paragraphTagStart = true
+                    fileToString += """<p>
+                        |
+                    """.trimMargin()
+                } else if (isNewParagraph) {
+                    isNewParagraph = false
+                    paragraphTagStart = true
+                    fileToString += """
+                        |</p>
+                        |<p>
+                        |
+                    """.trimMargin()
+                }
+                fileToString += it
+            }
+        }
+        if (paragraphTagStart)
+            fileToString += """
+                |</p>
+                """.trimIndent()
+
+        if (!Regex("""\~{2}|\*+""").matches(fileToString)) {
+            var stringToReturn = fileToString
+
+            stringToReturn = clearRegex("~~", stringToReturn)
+            stringToReturn = clearByStack(stringToReturn)
+
+            writer.write(stringToReturn)
+            writer.newLine()
+        } else {
+            writer.write(fileToString)
+        }
     }
     writer.write(
-        """ </p>
-        |</body>
+        """</body>
         |</html>
     """.trimMargin()
     )
     writer.close()
 }
+
 
 
 fun main() {
