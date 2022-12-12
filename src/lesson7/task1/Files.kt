@@ -445,9 +445,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     isFirstParagraphExist = true
                     isNewParagraph = false
                     paragraphTagStart = true
-                    fileToString += """<p>
-                        |
-                    """.trimMargin()
+                    fileToString += "<p>"
                 } else if (isNewParagraph) {
                     isNewParagraph = false
                     paragraphTagStart = true
@@ -461,11 +459,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
         if (paragraphTagStart)
-            fileToString += """
-                |
-                </p>
-                |
-                """.trimIndent()
+            fileToString += "</p>"
 
         if (!Regex("""\~{2}|\*+""").matches(fileToString)) {
             var stringToReturn = fileToString
