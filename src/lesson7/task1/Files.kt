@@ -462,7 +462,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         if (paragraphTagStart)
             fileToString += """
-                |</p>
+                |
+                </p>
+                |
                 """.trimIndent()
 
         if (!Regex("""\~{2}|\*+""").matches(fileToString)) {
