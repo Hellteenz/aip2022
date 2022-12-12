@@ -347,20 +347,26 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun clearRegex(reg: String, stringToReturn: String): String {
-    val word = if (reg == "~~") "s" else if (reg == "**") "b" else "i"
     val splitLine = stringToReturn.split(reg)
     if (splitLine.size > 1) {
         var stringToFun = String()
+        var isOpenWave = true
         splitLine.forEach {
             stringToFun += it
             stringToFun += if (it == splitLine.last()) "" else
-                if (splitLine.indexOf(it) % 2 == 0 || it.isEmpty()) "<$word>"
-                else "</$word>"
+                if (isOpenWave || it.isEmpty()) {
+                    isOpenWave = false
+                    "<s>"
+                } else {
+                    isOpenWave = true
+                    "</s>"
+                }
         }
         return stringToFun
     }
     return stringToReturn
 }
+
 
 fun clearByStack(lineElement: String): String {
     var stringToReturn = String()
