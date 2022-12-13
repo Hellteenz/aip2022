@@ -433,7 +433,6 @@ fun clearByStack(lineElement: String): String {
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-//    var start = System.currentTimeMillis()
     val writer = File(outputName).bufferedWriter()
     writer.write(
         """<html> 
