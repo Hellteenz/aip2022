@@ -346,30 +346,10 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
-fun clearRegex(reg: String, stringToReturn: String): String {
-    val splitLine = stringToReturn.split(reg)
-    if (splitLine.size > 1) {
-        var stringToFun = String()
-        var isOpenWave = true
-        splitLine.forEach {
-            stringToFun += it
-            stringToFun += if (it == splitLine.last()) "" else
-                if (isOpenWave || it.isEmpty()) {
-                    isOpenWave = false
-                    "<s>"
-                } else {
-                    isOpenWave = true
-                    "</s>"
-                }
-        }
-        return stringToFun
-    }
-    return stringToReturn
-}
-
-
 val stack = ArrayDeque<Int>()
 var stars = 0
+var waves = 0
+var isOpenWave = true
 
 fun handleStars(): String {
     var stringToReturn = String()
@@ -423,6 +403,7 @@ fun handleStars(): String {
 fun clearByStack(lineElement: String): String {
     var stringToReturn = String()
     stars = 0
+    waves = 0
     for (i in lineElement.indices) {
         if (lineElement[i] == '*') {
             stars++
@@ -431,8 +412,20 @@ fun clearByStack(lineElement: String): String {
             }
         } else if (stars > 0) {
             stringToReturn += handleStars()
-            stringToReturn += lineElement[i]
-        } else {
+        }
+        if (lineElement[i] == '~') {
+            waves++
+            if (waves == 2) {
+                if (isOpenWave) {
+                    stringToReturn += "<s>"
+                    isOpenWave = false
+                } else {
+                    stringToReturn += "</s>"
+                    isOpenWave = true
+                }
+                waves = 0
+            }
+        } else if (lineElement[i] != '*') {
             stringToReturn += lineElement[i]
         }
     }
@@ -440,6 +433,7 @@ fun clearByStack(lineElement: String): String {
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
+//    var start = System.currentTimeMillis()
     val writer = File(outputName).bufferedWriter()
     writer.write(
         """<html> 
@@ -484,7 +478,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             outputString += "\n"
         }
 
-        outputString = clearRegex("~~", outputString)
         writer.write(outputString)
     }
     writer.write(
