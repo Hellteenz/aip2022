@@ -444,39 +444,35 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var isNewParagraph = false
         var paragraphTagStart = false
         lineList.forEach {
-            if (it.isEmpty() || it == "\n") {
+            var stringLine = it
+            if (!Regex("""\~{2}|\*+""").matches(stringLine)) {
+                stringLine = clearRegex("~~", stringLine)
+                stringLine = clearByStack(stringLine)
+            }
+
+            var lineToReturn = String()
+            if (stringLine.isEmpty() || stringLine == "\n") {
                 isNewParagraph = true
             } else {
                 if (!isFirstParagraphExist) {
                     isFirstParagraphExist = true
                     isNewParagraph = false
                     paragraphTagStart = true
-                    fileToString += "<p>"
+                    lineToReturn += "<p>"
                 } else if (isNewParagraph) {
                     isNewParagraph = false
                     paragraphTagStart = true
-                    fileToString += """
-                        |</p>
-                        |<p>
-                        |
-                    """.trimMargin()
+                    lineToReturn += "</p><p>"
                 }
-                fileToString += it
+                lineToReturn += stringLine
             }
-        }
-        if (paragraphTagStart)
-            fileToString += "</p>"
 
-        if (!Regex("""\~{2}|\*+""").matches(fileToString)) {
-            var stringToReturn = fileToString
-
-            stringToReturn = clearRegex("~~", stringToReturn)
-            stringToReturn = clearByStack(stringToReturn)
-
-            writer.write(stringToReturn)
+            writer.write(lineToReturn)
             writer.newLine()
-        } else {
-            writer.write(fileToString)
+        }
+        if (paragraphTagStart) {
+            writer.write("</p>")
+            writer.newLine()
         }
     }
     writer.write(
@@ -486,8 +482,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     )
     writer.close()
 }
-
-
 
 fun main() {
     val a = "nonspace~~wwww~~~~nonspace~~"
