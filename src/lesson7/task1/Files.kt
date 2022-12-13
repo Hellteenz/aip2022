@@ -456,9 +456,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var paragraphTagStart = false
         lineList.forEach {
             var lineString = it
-            if (!Regex("""\*+""").matches(lineString)) {
-                lineString = clearByStack(lineString)
-            }
+            lineString = clearByStack(lineString)
 
             var resString = String()
             if (lineString.isEmpty() || lineString == "\n") {
@@ -485,9 +483,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             outputString += "\n"
         }
 
-        if (!Regex("""\~{2}""").matches(outputString)) {
-            outputString = clearRegex("~~", outputString)
-        }
+        outputString = clearRegex("~~", outputString)
         writer.write(outputString)
     }
     writer.write(
