@@ -459,6 +459,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             lineString = clearByStack(lineString)
 
             var resString = String()
+            lineString = lineString.trim()
             if (lineString.isEmpty() || lineString == "\n") {
                 isNewParagraph = true
             } else {
