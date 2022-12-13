@@ -475,6 +475,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (paragraphTagStart) {
             outputString += "</p>"
             outputString += "\n"
+        } else if (isNewParagraph) {
+            outputString += "<p></p>"
+            outputString += "\n"
         }
 
         writer.write(outputString)
