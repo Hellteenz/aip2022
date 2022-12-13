@@ -368,58 +368,69 @@ fun clearRegex(reg: String, stringToReturn: String): String {
 }
 
 
+val stack = ArrayDeque<Int>()
+var stars = 0
+
+fun handleStars(): String {
+    var stringToReturn = String()
+    if (stack.isEmpty()) {
+        stack.addLast(stars)
+        stringToReturn += when (stars) {
+            1 -> "<i>"
+            2 -> "<b>"
+            3 -> "<b><i>"
+            else -> ""
+        }
+    } else {
+        var starsFromStack = stack.removeLast()
+        if (stars == starsFromStack) {
+            stringToReturn += when (stars) {
+                1 -> "</i>"
+                2 -> "</b>"
+                3 -> "</i></b>"
+                else -> ""
+            }
+        } else if (stars == 3) {
+            stringToReturn += when (starsFromStack) {
+                1 -> "</i>"
+                2 -> "</b>"
+                else -> ""
+            }
+            if (stack.isEmpty()) {
+                stack.addLast(stars - starsFromStack)
+            } else {
+                starsFromStack = stack.removeLast()
+                stringToReturn += when (starsFromStack) {
+                    1 -> "</i>"
+                    2 -> "</b>"
+                    else -> ""
+                }
+            }
+        } else {
+            stack.addLast(starsFromStack)
+            stack.addLast(stars)
+            stringToReturn += when (stars) {
+                1 -> "<i>"
+                2 -> "<b>"
+                else -> ""
+            }
+        }
+    }
+    stars = 0
+    return stringToReturn
+}
+
 fun clearByStack(lineElement: String): String {
     var stringToReturn = String()
-    val stack = ArrayDeque<Int>()
-    var stars = 0
+    stars = 0
     for (i in lineElement.indices) {
         if (lineElement[i] == '*') {
             stars++
-        } else if (stars > 0) {
-            if (stack.isEmpty()) {
-                stack.addLast(stars)
-                stringToReturn += when (stars) {
-                    1 -> "<i>"
-                    2 -> "<b>"
-                    3 -> "<b><i>"
-                    else -> ""
-                }
-            } else {
-                var starsFromStack = stack.removeLast()
-                if (stars == starsFromStack) {
-                    stringToReturn += when (stars) {
-                        1 -> "</i>"
-                        2 -> "</b>"
-                        3 -> "</i></b>"
-                        else -> ""
-                    }
-                } else if (stars == 3) {
-                    stringToReturn += when (starsFromStack) {
-                        1 -> "</i>"
-                        2 -> "</b>"
-                        else -> ""
-                    }
-                    if (stack.isEmpty()) {
-                        stack.addLast(stars - starsFromStack)
-                    } else {
-                        starsFromStack = stack.removeLast()
-                        stringToReturn += when (starsFromStack) {
-                            1 -> "</i>"
-                            2 -> "</b>"
-                            else -> ""
-                        }
-                    }
-                } else {
-                    stack.addLast(starsFromStack)
-                    stack.addLast(stars)
-                    stringToReturn += when (stars) {
-                        1 -> "<i>"
-                        2 -> "<b>"
-                        else -> ""
-                    }
-                }
+            if (i == lineElement.length - 1) {
+                stringToReturn += handleStars()
             }
-            stars = 0
+        } else if (stars > 0) {
+            stringToReturn += handleStars()
             stringToReturn += lineElement[i]
         } else {
             stringToReturn += lineElement[i]
@@ -429,7 +440,6 @@ fun clearByStack(lineElement: String): String {
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var fileToString = String()
     val writer = File(outputName).bufferedWriter()
     writer.write(
         """<html> 
@@ -437,6 +447,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         """.trimMargin()
     )
     writer.newLine()
+    var outputString = String()
     val lineList = mutableListOf<String>()
     File(inputName).readLines().forEach { lineList += it }
     if (lineList.isNotEmpty()) {
@@ -444,36 +455,40 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var isNewParagraph = false
         var paragraphTagStart = false
         lineList.forEach {
-            var stringLine = it
-            if (!Regex("""\~{2}|\*+""").matches(stringLine)) {
-                stringLine = clearRegex("~~", stringLine)
-                stringLine = clearByStack(stringLine)
+            var lineString = it
+            if (!Regex("""\*+""").matches(lineString)) {
+                lineString = clearByStack(lineString)
             }
 
-            var lineToReturn = String()
-            if (stringLine.isEmpty() || stringLine == "\n") {
+            var resString = String()
+            if (lineString.isEmpty() || lineString == "\n") {
                 isNewParagraph = true
             } else {
                 if (!isFirstParagraphExist) {
                     isFirstParagraphExist = true
                     isNewParagraph = false
                     paragraphTagStart = true
-                    lineToReturn += "<p>"
+                    resString += "<p>"
                 } else if (isNewParagraph) {
                     isNewParagraph = false
                     paragraphTagStart = true
-                    lineToReturn += "</p><p>"
+                    resString += "</p><p>"
                 }
-                lineToReturn += stringLine
+                resString += lineString
             }
 
-            writer.write(lineToReturn)
-            writer.newLine()
+            outputString += resString
+            outputString += "\n"
         }
         if (paragraphTagStart) {
-            writer.write("</p>")
-            writer.newLine()
+            outputString += "</p>"
+            outputString += "\n"
         }
+
+        if (!Regex("""\~{2}""").matches(outputString)) {
+            outputString = clearRegex("~~", outputString)
+        }
+        writer.write(outputString)
     }
     writer.write(
         """</body>
