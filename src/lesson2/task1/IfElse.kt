@@ -130,6 +130,7 @@ fun sqrTrue(kX: Int, kY: Int, bX: Int, bY: Int): Int {
         else -> 0
     }
 }
+
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,

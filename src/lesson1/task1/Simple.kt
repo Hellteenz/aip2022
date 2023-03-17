@@ -269,3 +269,4 @@ fun myFun(table: Map<String, Int>, taxes: String): String {
     }
     return listOfRes.joinToString { s, d -> "$s - $d" }
 }
+

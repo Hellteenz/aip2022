@@ -116,14 +116,37 @@ class Tests {
 
     @Test
     fun fastSearchingPhone() {
-        assertEquals(listOf("Maxim", "Oczin"), fastSearchingPhone(listOf("Maxim", "Oleg", "Oczin"), "62946"))
+        assertEquals(listOf("Maxim", "Oczin"),
+            fastSearchingPhone(listOf("Maxim", "Oleg", "Oczin"), "62946")
+        )
         assertEquals(
             listOf("Vladimir", "Tkafinis", "Vladimir"),
-            fastSearchingPhone(listOf("Alexander", "Vladimir", "Anna", "Tkafinis", "Vladimir"), "85234647")
+            fastSearchingPhone(
+                listOf("Alexander", "Vladimir", "Anna", "Tkafinis", "Vladimir"),
+                "85234647"
+            )
         )
-        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Ion12"), "210") }
-        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("maxim"), "210") }
-        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Maxim"), "ac21") }
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            fastSearchingPhone(
+                listOf(
+                    "Ion12"
+                ), "210"
+            )
+        }
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            fastSearchingPhone(
+                listOf(
+                    "maxim"
+                ), "210"
+            )
+        }
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            fastSearchingPhone(
+                listOf(
+                    "Maxim"
+                ), "ac21"
+            )
+        }
     }
 
     @Test
@@ -144,10 +167,18 @@ class Tests {
 
     @Test
     fun myFun() {
-        assertEquals("ООО Горняк - 12000.0, Сбербанк - 17100.0", myFun(mapOf("Производство напитков" to 4, "Горнодобыв пром" to 12, "Банковские операции" to 9), """ООО Горняк - Горнодобыв пром - 100000 
+        assertEquals("ООО Горняк - 12000.0, Сбербанк - 17100.0", myFun(
+            mapOf("Производство напитков" to 4, "Горнодобыв пром" to 12, "Банковские операции" to 9),
+            """ООО Горняк - Горнодобыв пром - 100000 
             |Сбербанк - Банковские операции - 190000""".trimMargin()
-            )
         )
-        Assertions.assertThrows(IllegalArgumentException::class.java) { fastSearchingPhone(listOf("Maxim"), "ac21") }
+        )
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            fastSearchingPhone(
+                listOf(
+                    "Maxim"
+                ), "ac21"
+            )
+        }
     }
 }
